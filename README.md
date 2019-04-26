@@ -1,4 +1,4 @@
-#Projeto final: Engenharia de Software - GCC188
+# Projeto final: Engenharia de Software - GCC188
 
 Projeto final da disciplina Engenharia de Software.
 
