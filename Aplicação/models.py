@@ -15,4 +15,4 @@ class Livro(db.Model):
     exemplares = db.Column(db.Integer, nullable=False)
 
     def __repr__(self):
-        return '<Livro %r>' % self.titulo
+        return '<Livro {}>'.format(self.isbn)
