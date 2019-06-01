@@ -1,8 +1,26 @@
 from flask_wtf import FlaskForm
-from wtforms import IntegerField, DecimalField, StringField, SubmitField
-from wtforms.validators import DataRequired, Regexp, Email
+from wtforms import IntegerField, DecimalField, StringField, SubmitField, SelectField
+from wtforms.validators import InputRequired as Req, Regexp, Email
+
 
 class FormConsultaLivro(FlaskForm):
-    nome = StringField()
-    isbn = StringField()
+    campo = SelectField('Campo de busca', choices=[('isbn','ISBN'), ('titulo','Título')])
+    termo = StringField('Palavra-chave', validators=[Req()])
     submit = SubmitField()
+
+
+class FormCadastroLivro(FlaskForm):
+    titulo = StringField('Título', validators=[Req()])
+    autor = StringField('Autor', validators=[Req()])
+    editora = StringField('Editora', validators=[Req()])
+    edicao = StringField('Edição', validators=[Req()])
+    ano = IntegerField('Ano', validators=[Req()])
+    isbn = StringField('ISBN', validators=[Req()])
+    idioma = StringField('Idioma', validators=[Req()])
+    preco = DecimalField('Preço', validators=[Req()])
+    exemplares = IntegerField('Número de exemplares', validators=[Req()])
+    submit = SubmitField()
+
+#class FormAtualizacaoLivro(FlaskForm):
+
+#class FormExclusaoLivro(FlaskForm):
