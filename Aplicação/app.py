@@ -1,8 +1,9 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect, url_for, request
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 from models import *
 from forms import *
+from tables import *
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://localhost/livraria'
@@ -16,32 +17,52 @@ db.init_app(app)
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', header='Bem vindo!')
 
 
-@app.route('/livro/consultar', methods=['GET', 'POST'])
+@app.route('/livros/consultar', methods=['GET', 'POST'])
 def consultar_livro():
     form = FormConsultaLivro()
+    # ao enviar form, realiza consulta e redireciona
     if form.validate_on_submit():
-        livro = Livro.query.filter_by(isbn=form.isbn)
-        return str(livro)
+        opcao = form.campo.data
+        if opcao == 'isbn':
+            resultado = Livro.query.filter_by(isbn=form.termo.data).all()
+        else:
+            resultado = Livro.query.filter_by(titulo=form.termo.data).all()
+        tabela = TabelaLivros(resultado)
+        #return redirect(url_for('resultado_livros', tabela=tabela))
+        return render_template('livros/resultado.html', table=tabela)
+    # renderiza pagina
     else:
-        return render_template('consultar_livro.html', form=form)
+        return render_template('livros/consultar.html', form=form)
 
+'''
+@app.route('/livros/consultar/resultado')
+def resultado_livros():
+    return render_template('livros/resultado.html',
+                           table=request.args.get('tabela'))
+'''
 
 @app.route('/livro/cadastrar', methods=['GET', 'POST'])
 def cadastrar_livro():
-    return '<h1>cadastrar livro</h1>'
+    form = FormCadastroLivro()
+    if form.validate_on_submit():
+        pass
+    return render_template('livros/consultar.html', form=form)
 
 
 @app.route('/livro/atualizar', methods=['GET', 'POST'])
 def atualizar_livro():
-    return '<h1>atualizar livro</h1>'
+    form = FormConsultaLivro()
+    #form = FormCadastroLivro()
+    return render_template('livros/atualizar.html', form=form)
 
 
 @app.route('/livro/excluir', methods=['GET', 'POST'])
 def excluir_livro():
-    return '<h1>excluir livro</h1>'
+    form = FormConsultaLivro()
+    return render_template('livros/excluir.html', form=form)
 
 
 @app.errorhandler(404)
