@@ -3,3 +3,4 @@
 Aplicação/__pycache__/
 Aplicação/venv/
 *.odt
+*.db
