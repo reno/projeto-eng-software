@@ -31,7 +31,7 @@ def consultar_livro():
         return render_template('livros/resultado.html', table=tabela)
     # formulário ainda não enviado, renderiza página
     else:
-        return render_template('livros/consultar.html', form=form)
+        return render_template('livro.html', form=form, header='Consultar livro')
 
 
 @app.route('/livro/cadastrar', methods=['GET', 'POST'])
@@ -50,22 +50,42 @@ def cadastrar_livro():
             db.session.add(livro)
             db.session.commit()            
             return render_template('index.html', text='Livro cadastrado com sucesso.')
+    # formulário ainda não enviado, renderiza página
     else:
-        # formulário ainda não enviado, renderiza página
-        return render_template('livros/consultar.html', form=form)
+        return render_template('livro.html', form=form, header='Cadastrar livro')
 
 
 @app.route('/livro/atualizar', methods=['GET', 'POST'])
 def atualizar_livro():
-    #form = FormConsultaLivro()
-    #form = FormCadastroLivro()
-    return render_template('index.html', header='Atualizar livro')
+    form_isbn = FormConsultaIsbn()
+    form_atualizacao = FormAtualizacaoLivro()
+    livro = None
+    # dados atualizados, grava no BD
+    if form_atualizacao.validate_on_submit():
+        dados = form_atualizacao.data
+        del dados['submit']
+        del dados['csrf_token']
+        #dados_livro = Livro(**dados)
+        livro = Livro.query.filter_by(isbn=form_isbn.isbn.data)#.update(**dados)
+        livro.data = dados
+        db.session.commit()
+        return render_template('index.html', text='Livro atualizado com sucesso.')
+    # consulta realizada, carrega dados e renderiza form de atualização 
+    if form_isbn.validate_on_submit():
+        livro = Livro.query.filter_by(isbn=form_isbn.isbn.data).first()
+    if livro is not None:
+        form_atualizacao = FormAtualizacaoLivro(obj=livro)
+        form_atualizacao.populate_obj(livro)
+        return render_template('livro.html', form=form_atualizacao)
+    # formulário ainda não enviado, renderiza página
+    else:
+        return render_template('livro.html', form=form_isbn, header='Atualizar livro')
 
 
 @app.route('/livro/excluir', methods=['GET', 'POST'])
 def excluir_livro():
     #form = FormConsultaLivro()
-    return render_template('index.html', header='Excluir livro')
+    return render_template('livro.html', form=form, header='Excluir livro')
 
 
 @app.errorhandler(404)
