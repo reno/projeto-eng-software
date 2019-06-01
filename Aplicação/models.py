@@ -11,6 +11,7 @@ class Livro(db.Model):
     edicao = db.Column(db.Integer, nullable=False)
     ano = db.Column(db.Integer, nullable=False)
     isbn = db.Column(db.String, nullable=False, unique=True)
+    idioma = db.Column(db.String, nullable=False)
     preco = db.Column(db.Float, nullable=False)
     exemplares = db.Column(db.Integer, nullable=False)
 
