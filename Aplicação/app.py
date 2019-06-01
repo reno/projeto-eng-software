@@ -23,46 +23,49 @@ def index():
 @app.route('/livros/consultar', methods=['GET', 'POST'])
 def consultar_livro():
     form = FormConsultaLivro()
-    # ao enviar form, realiza consulta e redireciona
+    # ao enviar form, realiza consulta e renderiza resultados 
     if form.validate_on_submit():
-        opcao = form.campo.data
-        if opcao == 'isbn':
-            resultado = Livro.query.filter_by(isbn=form.termo.data).all()
-        else:
-            resultado = Livro.query.filter_by(titulo=form.termo.data).all()
+        parametros = {form.campo.data: form.termo.data}
+        resultado = Livro.query.filter_by(**parametros).all()
         tabela = TabelaLivros(resultado)
-        #return redirect(url_for('resultado_livros', tabela=tabela))
         return render_template('livros/resultado.html', table=tabela)
-    # renderiza pagina
+    # formulário ainda não enviado, renderiza página
     else:
         return render_template('livros/consultar.html', form=form)
 
-'''
-@app.route('/livros/consultar/resultado')
-def resultado_livros():
-    return render_template('livros/resultado.html',
-                           table=request.args.get('tabela'))
-'''
 
 @app.route('/livro/cadastrar', methods=['GET', 'POST'])
 def cadastrar_livro():
     form = FormCadastroLivro()
+    # ao enviar form, verifica se livro já existe no BD e cadastra
     if form.validate_on_submit():
-        pass
-    return render_template('livros/consultar.html', form=form)
+        livro = Livro.query.filter_by(isbn=form.isbn.data).first()
+        if livro is not None:
+            return render_template('index.html', text='Livro {} já cadastrado.'.format(livro))
+        else:
+            dados = form.data
+            del dados['submit']
+            del dados['csrf_token']
+            livro = Livro(**dados)
+            db.session.add(livro)
+            db.session.commit()            
+            return render_template('index.html', text='Livro cadastrado com sucesso.')
+    else:
+        # formulário ainda não enviado, renderiza página
+        return render_template('livros/consultar.html', form=form)
 
 
 @app.route('/livro/atualizar', methods=['GET', 'POST'])
 def atualizar_livro():
-    form = FormConsultaLivro()
+    #form = FormConsultaLivro()
     #form = FormCadastroLivro()
-    return render_template('livros/atualizar.html', form=form)
+    return render_template('index.html', header='Atualizar livro')
 
 
 @app.route('/livro/excluir', methods=['GET', 'POST'])
 def excluir_livro():
-    form = FormConsultaLivro()
-    return render_template('livros/excluir.html', form=form)
+    #form = FormConsultaLivro()
+    return render_template('index.html', header='Excluir livro')
 
 
 @app.errorhandler(404)
