@@ -8,11 +8,11 @@ class Livro(db.Model):
     titulo = db.Column(db.String, nullable=False)
     autor = db.Column(db.String, nullable=False)
     editora = db.Column(db.String, nullable=False)
-    edicao = db.Column(db.String, nullable=False)
+    edicao = db.Column(db.Integer, nullable=False)
     ano = db.Column(db.Integer, nullable=False)
     isbn = db.Column(db.String, nullable=False, unique=True)
     preco = db.Column(db.Float, nullable=False)
     exemplares = db.Column(db.Integer, nullable=False)
 
     def __repr__(self):
-        return '<Livro {}>'.format(self.isbn)
+        return self.isbn
