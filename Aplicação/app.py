@@ -1,19 +1,23 @@
 from flask import Flask, render_template, redirect, url_for, request
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
-from models import *
+#from models import *
 from forms import *
 from tables import *
+import os
 
 app = Flask(__name__)
+
+#basedir = os.path.abspath(os.path.dirname(__file__))
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'livraria.db')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://localhost/livraria'
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'string de verificacao do flask-wtf'
 
 bootstrap = Bootstrap(app)
 db = SQLAlchemy(app)
-db.init_app(app)
-
+db.init_app(app) 
+from models import *  # movido para corrigir dependencia circular
 
 @app.route('/')
 def index():
@@ -48,7 +52,7 @@ def cadastrar_livro():
             del dados['csrf_token']
             livro = Livro(**dados)
             db.session.add(livro)
-            db.session.commit()            
+            db.session.commit()
             return render_template('index.html', text='Livro cadastrado com sucesso.')
     # formulário ainda não enviado, renderiza página
     else:
@@ -56,35 +60,38 @@ def cadastrar_livro():
 
 
 @app.route('/livro/atualizar', methods=['GET', 'POST'])
-def atualizar_livro():
+#@app.route('/livro/excluir', methods=['GET', 'POST'])
+def consulta_isbn():
     form_isbn = FormConsultaIsbn()
-    form_atualizacao = FormAtualizacaoLivro()
-    livro = None
-    # dados atualizados, grava no BD
-    if form_atualizacao.validate_on_submit():
-        dados = form_atualizacao.data
-        del dados['submit']
-        del dados['csrf_token']
-        #dados_livro = Livro(**dados)
-        livro = Livro.query.filter_by(isbn=form_isbn.isbn.data)#.update(**dados)
-        livro.data = dados
-        db.session.commit()
-        return render_template('index.html', text='Livro atualizado com sucesso.')
     # consulta realizada, carrega dados e renderiza form de atualização 
     if form_isbn.validate_on_submit():
         livro = Livro.query.filter_by(isbn=form_isbn.isbn.data).first()
-    if livro is not None:
-        form_atualizacao = FormAtualizacaoLivro(obj=livro)
-        form_atualizacao.populate_obj(livro)
-        return render_template('livro.html', form=form_atualizacao)
+        return redirect(url_for('atualizar_livro', isbn=livro.isbn))
+    # formulário ainda não enviado, renderiza página
+    else: 
+        return render_template('livro.html', form=form_isbn, header='Atualizar livro')
+
+    
+@app.route('/livro/atualizar/', methods=['GET', 'POST'])
+def atualizar_livro(): 
+    isbn = request.args['isbn']
+    livro = Livro.query.filter_by(isbn=isbn).first()
+    form_atualizacao = FormAtualizacaoLivro(obj=livro)
+    form_atualizacao.populate_obj(livro)
+    if form_atualizacao.validate_on_submit():
+        dados = {k: v for k, v in form_atualizacao.data.items()
+                 if k not in {'submit','csrf_token'}}
+        livro.data = dados 
+        db.session.commit()
+        return render_template('index.html', text='Livro atualizado com sucesso.')  
     # formulário ainda não enviado, renderiza página
     else:
-        return render_template('livro.html', form=form_isbn, header='Atualizar livro')
+        return render_template('livro.html', form=form_atualizacao) 
 
 
 @app.route('/livro/excluir', methods=['GET', 'POST'])
 def excluir_livro():
-    #form = FormConsultaLivro()
+    #db.session.delete(livro)
     return render_template('livro.html', form=form, header='Excluir livro')
 
 
