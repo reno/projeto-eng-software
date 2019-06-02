@@ -4,6 +4,8 @@ from models import *
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://localhost/livraria'
+#basedir = os.path.abspath(os.path.dirname(__file__))
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'livraria.db')
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 # db é inicializado em models.py 
