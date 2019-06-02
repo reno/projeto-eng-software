@@ -8,7 +8,6 @@ class FormConsultaLivro(FlaskForm):
     termo = StringField('Palavra-chave', validators=[Req()])
     submit = SubmitField('Consultar')
 
-
 class FormCadastroLivro(FlaskForm):
     titulo = StringField('Título', validators=[Req()])
     autor = StringField('Autor', validators=[Req()])
@@ -19,27 +18,11 @@ class FormCadastroLivro(FlaskForm):
     idioma = StringField('Idioma', validators=[Req()])
     preco = DecimalField('Preço', validators=[Req()])
     exemplares = IntegerField('Número de exemplares', validators=[Req()])
-    submit = SubmitField('Cadastrar')
-
+    submit = SubmitField('Enviar')
 
 class FormConsultaIsbn(FlaskForm):
     isbn = StringField('ISBN', validators=[Req()])
     submit = SubmitField('Consultar')
 
-
-class FormAtualizacaoLivro(FlaskForm):
-    titulo = StringField('Título', validators=[Req()])
-    autor = StringField('Autor', validators=[Req()])
-    editora = StringField('Editora', validators=[Req()])
-    edicao = StringField('Edição', validators=[Req()])
-    ano = IntegerField('Ano', validators=[Req()])
-    isbn = StringField('ISBN', validators=[Req()])
-    idioma = StringField('Idioma', validators=[Req()])
-    preco = DecimalField('Preço', validators=[Req()])
-    exemplares = IntegerField('Número de exemplares', validators=[Req()])
-    submit = SubmitField('Atualizar')
-
-
 class FormExclusaoLivro(FlaskForm):
-    isbn = StringField('ISBN', validators=[Req()])
     submit = SubmitField('Excluir')
