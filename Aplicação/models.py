@@ -1,6 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
+from app import db  # movido para corrigir dependencia circular
 
-db = SQLAlchemy()
 
 class Livro(db.Model):
     __tablename__ = "livros"
