@@ -59,24 +59,28 @@ def cadastrar_livro():
         return render_template('livro.html', form=form, header='Cadastrar livro')
 
 
-@app.route('/livro/atualizar', methods=['GET', 'POST'])
-#@app.route('/livro/excluir', methods=['GET', 'POST'])
-def consulta_isbn():
+@app.route('/livro/<op>/consulta', methods=['GET', 'POST'])
+def consulta_isbn(op):
     form_isbn = FormConsultaIsbn()
-    # consulta realizada, carrega dados e renderiza form de atualização 
+    # consulta realizada, redireciona conforme operação 
     if form_isbn.validate_on_submit():
         livro = Livro.query.filter_by(isbn=form_isbn.isbn.data).first()
-        return redirect(url_for('atualizar_livro', isbn=livro.isbn))
+        if livro is None:
+            return render_template('index.html', text='Nenhum livro encontrado.')    
+        if op == 'atualizar':
+            return redirect(url_for('atualizar_livro', isbn=livro.isbn))
+        else:
+            return redirect(url_for('excluir_livro', isbn=livro.isbn))
     # formulário ainda não enviado, renderiza página
     else: 
-        return render_template('livro.html', form=form_isbn, header='Atualizar livro')
+        return render_template('livro.html', form=form_isbn, header='{} livro'.format(op.capitalize()))
 
     
 @app.route('/livro/atualizar/', methods=['GET', 'POST'])
 def atualizar_livro(): 
     isbn = request.args['isbn']
     livro = Livro.query.filter_by(isbn=isbn).first()
-    form_atualizacao = FormAtualizacaoLivro(obj=livro)
+    form_atualizacao = FormCadastroLivro(obj=livro)
     form_atualizacao.populate_obj(livro)
     if form_atualizacao.validate_on_submit():
         dados = {k: v for k, v in form_atualizacao.data.items()
@@ -89,10 +93,19 @@ def atualizar_livro():
         return render_template('livro.html', form=form_atualizacao) 
 
 
-@app.route('/livro/excluir', methods=['GET', 'POST'])
+@app.route('/livro/excluir/', methods=['GET', 'POST'])
 def excluir_livro():
-    #db.session.delete(livro)
-    return render_template('livro.html', form=form, header='Excluir livro')
+    isbn = request.args['isbn']
+    resultado = Livro.query.filter_by(isbn=isbn).all()
+    tabela = TabelaLivros(resultado)
+    livro = resultado[0]
+    confirmacao = FormExclusaoLivro()
+    if confirmacao.validate_on_submit():
+        db.session.delete(livro)
+        db.session.commit()
+        return render_template('index.html', text='Livro excluido com sucesso.')
+    else:
+        return render_template('livros/excluir.html', table=tabela, form=confirmacao, header='Excluir livro')
 
 
 @app.errorhandler(404)
