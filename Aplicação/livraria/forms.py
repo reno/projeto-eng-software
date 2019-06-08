@@ -1,3 +1,9 @@
+'''
+livraria/forms.py
+
+Define formularios usados na aplicação.
+'''
+
 from flask_wtf import FlaskForm
 from wtforms import IntegerField, DecimalField, StringField, SubmitField, SelectField
 from wtforms.validators import InputRequired as Req, Regexp, Email

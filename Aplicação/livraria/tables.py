@@ -1,3 +1,9 @@
+'''
+livraria/tables.py
+
+Define tabelas usadas no resultado das consultas.
+'''
+
 from flask_table import Table, Col
 
 class TabelaLivros(Table):

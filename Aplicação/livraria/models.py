@@ -1,6 +1,12 @@
-from flask_sqlalchemy import SQLAlchemy
-from app import db  # movido para corrigir dependencia circular
+'''
+livraria/models.py
 
+Define tabelas do banco de dados. Para criação do BD, execute o script 'create_db.py'
+'''
+
+from flask_sqlalchemy import SQLAlchemy
+
+db = SQLAlchemy()
 
 class Livro(db.Model):
     __tablename__ = "livros"
