@@ -1,15 +1,17 @@
-import os
+'''
+create_db.py
+
+Script para criação do banco de dados. Recebe argumento ('dev', 'testes' ou 'producao').
+'''
+
+from sys import argv
 from flask import Flask
-from models import *
+from config import config
+from livraria.models import *
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://localhost/livraria'
-#basedir = os.path.abspath(os.path.dirname(__file__))
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'livraria.db')
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-
-# db é inicializado em models.py 
-db.init_app(app)
+app.config.from_object(config[argv[1] or 'dev'])
+db.init_app(app)  # inicializado em models.py 
 
 def main():
     db.create_all()
