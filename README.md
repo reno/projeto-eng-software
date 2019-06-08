@@ -7,13 +7,15 @@
 Sistema de controle de vendas para livraria, incluindo base de dados de livros, vendedores, clientes e pedidos. A aplicação web utiliza a linguagem python e o microframework Flask, além de HTML, CSS e Bootstrap para o front-end.
 
 
-### Releases
+
+## Releases
 
 *  **v0.1**: Documentação de requisitos e protótipo da interface.
 * **v1**: Documentação de projeto incluindo diagramas de classes e de sequência, além da implementação da interface e operações sobre a tabela Livros. 
 
 
-### Estrutura do projeto
+
+## Estrutura do projeto
 
 O projeto é organizado conforme abaixo:
 
@@ -47,7 +49,8 @@ Uma breve descrição de arquivos e pastas:
 * `app.py` código que instancia a aplicação.
 
 
-### Requisitos
+
+## Requisitos
 
 * **python 3.4+**
 
@@ -62,8 +65,9 @@ Uma breve descrição de arquivos e pastas:
   No Ubuntu, o gerenciador de ambiente virtual não é instalado por padrão. Para instalar, use: `sudo apt-get install python3-venv`
 
 
-### Uso
 
+## Uso
+  
 **1. Configuração do ambiente virtual**
 
 Faça o clone do repositório:
@@ -86,7 +90,7 @@ Instale as dependências no ambiente virtual:
 
 `pip install -r requirements.txt`
 
-
+  
 **2. Inicialização do banco de dados (opcional)**
 
 Caso deseje inicializar o banco de dados, execute:
@@ -95,7 +99,7 @@ Caso deseje inicializar o banco de dados, execute:
 
 As configurações do banco de dados estão localizadas no arquivo `config.py`.
 
-
+  
 **3. Execução da aplicação**
 
 Finalmente, execute:
@@ -105,7 +109,8 @@ Finalmente, execute:
 A aplicação poderá ser acessada por um navegador no endereço `http://localhost:5000`
 
 
-### Colaboração
+
+## Colaboração
 
 Ao realizar um commit, indique na mensagem o fechamento da issue relacionada (caso possua) usando `Closes #1`, com o número da Issue. Isso fechará o Issue automaticamente.
 
