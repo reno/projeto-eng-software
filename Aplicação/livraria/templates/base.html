@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+
+{% extends "bootstrap/base.html" %}
+
+{% block title %}Livraria do Amorim{% endblock %}
+
+{% block navbar %}
+<nav class="navbar sticky-top navbar-light" style="background-color: #ffcc00;">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle"
+            data-toggle="collapse" data-target=".navbar-collapse">
+                <span style="background-color: black" class="icon-bar"></span>
+                <span style="background-color: black" class="icon-bar"></span>
+                <span style="background-color: black" class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Livraria do Amorim</a>
+        </div>
+
+		<div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <!-- Item do menu -->
+      			<li class="nav-item dropdown">
+        			<a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+          				Livros
+        			</a>
+        			<ul class="dropdown-menu">
+          			<li><a href="{{ url_for('consultar_livro') }}" >Consultar livro<br></a>
+         			 	<li><a href="{{ url_for('cadastrar_livro') }}">Cadastrar livro<br></a>
+         			 	<li><a href="{{ url_for('consulta_isbn', op='atualizar') }}">Atualizar livro<br></a>
+         			 	<li><a href="{{ url_for('consulta_isbn', op='excluir') }}">Excluir livro<br></a>
+			        </ul>
+      			</li>
+      			<!-- Item do menu -->
+      			<li class="nav-item dropdown">
+        			<a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+          				Pedidos
+        			</a>
+        			<ul class="dropdown-menu">
+          				<li><a href="#">Novo pedido<br></a>
+         			 	<li><a href="#">Consultar pedidos<br></a>
+         			 	<li><a href="#">Atualizar pedido<br></a>
+         			 	<li><a href="#">Cancelar pedido<br></a>
+			        </ul>
+      			</li>
+      			<!-- Item do menu -->
+      			<li class="nav-item dropdown">
+        			<a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+          				Clientes
+        			</a>
+        			<ul class="dropdown-menu">
+          				<li><a href="#">Consultar cliente<br></a>
+         			 	<li><a href="#">Novo cliente<br></a>
+         			 	<li><a href="#">Atualizar cliente<br></a>
+			        </ul>
+      			</li>
+      			<!-- Item do menu -->
+      			<li class="nav-item dropdown">
+        			<a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+          				Admin
+        			</a>
+        			<ul class="dropdown-menu">
+          				<li><a href="#">Consultar vendedor<br></a>
+         			 	<li><a href="#">Cadastrar vendedor<br></a>
+         			 	<li><a href="#">Atualizar vendedor<br></a>
+         			 	<li><a href="#">Excluir vendedor<br></a>
+         			 	<li><a href="#">Excluir cliente<br></a>
+			        </ul>
+      			</li>
+      		</ul>
+      		<ul class="nav navbar-nav navbar-right">
+      			<li class="nav-item dropdown">
+        			<a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+          				Usuário
+        			</a>
+        			<ul class="dropdown-menu">
+          				<li><a href="#">Sair<br></a>
+			        </ul>
+      			</li>
+
+            </ul>
+        </div>   
+    </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    {% block page_content %}{% endblock %}
+</div>
+{% endblock %}
+
+
+
+
+

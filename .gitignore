@@ -1,3 +1,7 @@
 .DS_Store
 .gitattributes
+Aplicação/__pycache__/
+Aplicação/livraria/__pycache__/
+Aplicação/venv/
 *.odt
+*.db
