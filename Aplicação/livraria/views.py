@@ -4,8 +4,8 @@ livraria/views.py
 Define rotas da aplicação.
 '''
 
-
-from flask import Flask, render_template, redirect, url_for, request
+from flask import Flask, render_template, redirect, url_for, request, session
+from isbnlib import is_isbn10, is_isbn13, mask, canonical, meta
 from livraria.models import *
 from livraria.forms import *
 from livraria.tables import *
@@ -33,23 +33,38 @@ def consultar_livro():
 
 @app.route('/livro/cadastrar', methods=['GET', 'POST'])
 def cadastrar_livro():
-    form = FormCadastroLivro()
+    form = FormCadastroLivro()     
     # ao enviar form, verifica se livro já existe no BD e cadastra
     if form.validate_on_submit():
         livro = Livro.query.filter_by(isbn=form.isbn.data).first()
         if livro is not None:
-            return render_template('index.html', text='Livro {} já cadastrado.'.format(livro))
+            return render_template('index.html', text='Livro {} já cadastrado.'.format(mask(str(livro))))
         else:
-            dados = form.data
-            del dados['submit']
-            del dados['csrf_token']
+            dados = {k: v for k, v in form.data.items()
+                     if k not in {'submit','csrf_token'}}
             livro = Livro(**dados)
+            livro['isbn'] = canonical(livro['isbn'])
             db.session.add(livro)
             db.session.commit()
-            return render_template('index.html', text='Livro cadastrado com sucesso.')
+            return render_template('index.html', text='Livro {} cadastrado com sucesso.'.format(mask(livro)))
     # formulário ainda não enviado, renderiza página
     else:
-        return render_template('livro.html', form=form, header='Cadastrar livro')
+        return render_template('livros/cadastrar.html', form=form, header='Cadastrar livro')
+
+
+@app.route('/livro/cadastrar/meta', methods=['POST'])
+def prencher_metadados():
+    isbn = request.form['isbn']
+    #with meta(isbn) as data:
+    try:
+        data = meta(isbn)
+        session['metadados'] = {'titulo': data['Title'],
+        'autor': data['Authors'][0], 'editora': data['Publisher'],
+        'edicao': 0, 'ano': data['Year'], 'isbn': data['ISBN-13'],
+        'idioma': data['Language'], 'preco': 0, 'exemplares': 0}
+    except:
+        pass
+    return redirect(url_for('cadastrar_livro'), code=307)
 
 
 @app.route('/livro/<op>/consulta', methods=['GET', 'POST'])

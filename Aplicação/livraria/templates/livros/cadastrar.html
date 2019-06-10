@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block scripts %}
+	<script type="text/javascript">
+	window.onload = function () {
+		function checkIsbn() {
+			const ajax = new XMLHttpRequest();
+			ajax.open("post", "cadastrar/meta", true);
+			var data = new FormData()
+			data.append("isbn", field.value);
+			ajax.send(data);
+		}
+		var field = document.getElementById("isbn_field");
+		field.addEventListener("blur", checkIsbn, false);
+	};
+	</script>
+	{{super()}}
+{% endblock %}
+
+
+{% block page_content %}
+<div>
+    <h1>{{ header }}</h1>
+</div>
+{{ wtf.quick_form(form) }}
+<div>
+	<p>{{ text }}</p>
+</div>
+{% endblock %}
