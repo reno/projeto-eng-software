@@ -17,4 +17,5 @@ def set_config(ambiente):
 
 app = Flask(__name__)
 app.config.from_object(config['base'])
-from .views import *
+#from .views import *
+from .views import livro, erros
