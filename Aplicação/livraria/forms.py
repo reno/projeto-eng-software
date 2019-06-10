@@ -6,7 +6,7 @@ Define formularios usados na aplicação.
 
 from flask_wtf import FlaskForm
 from wtforms import IntegerField, DecimalField, StringField, SubmitField, SelectField
-from wtforms.validators import InputRequired as Req, Email, ValidationError
+from wtforms.validators import DataRequired as Data, Email, ValidationError
 from isbnlib import is_isbn10, is_isbn13
 from livraria.models import *
 
@@ -24,25 +24,25 @@ class FormConsultaLivro(FlaskForm):
     opcoes = [(atr, atr.capitalize()) for atr in dir(Livro)
               if atr is not 'id' and not atr.startswith(('_', 'q', 'm'))]
     campo = SelectField('Campo de busca', choices=opcoes)  
-    termo = StringField('Palavra-chave', validators=[Req()])
+    termo = StringField('Palavra-chave', validators=[Data()])
     submit = SubmitField('Consultar')
 
 
 class FormCadastroLivro(FlaskForm):
-    titulo = StringField('Título', validators=[Req()])
-    autor = StringField('Autor', validators=[Req()])
-    editora = StringField('Editora', validators=[Req()])
-    edicao = StringField('Edição', validators=[Req()])
-    ano = IntegerField('Ano', validators=[Req()])
-    isbn = StringField('ISBN', validators=[Req()], id='isbn_field')#, isbn()], )
-    idioma = StringField('Idioma', validators=[Req()])
-    preco = DecimalField('Preço', validators=[Req()])
-    exemplares = IntegerField('Número de exemplares', validators=[Req()])
+    titulo = StringField('Título', validators=[Data()])
+    autor = StringField('Autor', validators=[Data()])
+    editora = StringField('Editora', validators=[Data()])
+    edicao = StringField('Edição', validators=[Data()])
+    ano = IntegerField('Ano', validators=[Data()])
+    isbn = StringField('ISBN', validators=[Data()], id='isbn_field')#, isbn()], )
+    idioma = StringField('Idioma', validators=[Data()])
+    preco = DecimalField('Preço', validators=[Data()])
+    exemplares = IntegerField('Número de exemplares', validators=[Data()])
     submit = SubmitField('Enviar')
 
 
 class FormConsultaIsbn(FlaskForm):
-    isbn = StringField('ISBN', validators=[Req()])#, isbn()])
+    isbn = StringField('ISBN', validators=[Data()])#, isbn()])
     submit = SubmitField('Consultar')
 
 
