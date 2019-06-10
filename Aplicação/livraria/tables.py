@@ -5,14 +5,34 @@ Define tabelas usadas no resultado das consultas.
 '''
 
 from flask_table import Table, Col
+from isbnlib import mask
+
+class IsbnCol(Col):
+    def td_format(self, content):
+        try:
+            return mask(content)
+        except:
+            return content
+
+
+class PriceCol(Col):
+    def td_format(self, content):
+        return 'R$ {:5.2f}'.format(content)
+
+
+class EditionCol(Col):
+    def td_format(self, content):
+        return '{}ª'.format(content)
+
 
 class TabelaLivros(Table):
+    classes = ['table', 'table-striped', 'col-lg-3']
     id = Col('ID', show=False)
-    isbn = Col('ISBN')
+    isbn = IsbnCol('ISBN')
     titulo = Col('Título')
     autor = Col('Autor')
     editora = Col('Editora')
-    edicao = Col('Edição')
+    edicao = EditionCol('Edição')
     ano = Col('Ano')
-    preco = Col('Preço')
+    preco = PriceCol('Preço')
     exemplares = Col('Exemplares')
