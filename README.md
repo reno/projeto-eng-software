@@ -68,7 +68,7 @@ Uma breve descrição de arquivos e pastas:
 
   A aplicação é pré-configurada para o PostgreSQL no ambiente de desenvolvimento, e inclui as configurações para uso do SQLite. Instruções de instalação do PostgreSQL ser encontradas [aqui](https://www.postgresql.org/download/).
   
-  Para instalar o SQLite, no Linux, basta utilizar os comandos `apt-get install sqlite3` e   apt-get install libsqlite3-dev`.
+  Para instalar o SQLite, no Linux, basta utilizar os comandos `apt-get install sqlite3` e   `apt-get install libsqlite3-dev`.
 
 ## Uso
   
