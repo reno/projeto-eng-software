@@ -4,18 +4,18 @@
 
 **Projeto:** Livraria do Amorim
 
-Sistema de controle de vendas para livraria, incluindo base de dados de livros, vendedores, clientes e pedidos. A aplicação web utiliza a linguagem python e o microframework Flask, além de HTML, CSS e Bootstrap para o front-end.
+Sistema de controle de vendas para livraria, incluindo base de dados de livros, vendedores, clientes e pedidos. A aplicação web utiliza a linguagem python e o microframework Flask, além de HTML, Bootstrap e Javascript para o front-end.
 
 
 
 ## Releases
 
 *  **v0.1**: Documentação de requisitos e protótipo da interface.
-* **v1**: Documentação de projeto incluindo diagramas de classes e de sequência, além da implementação da interface e operações sobre a tabela Livros. 
+*  **v1**: Documentação de projeto incluindo diagramas de classes e de sequência, além da implementação da interface e operações sobre a tabela Livros. 
 
 
 
-## Estrutura do projeto
+## Estrutura da aplicação
 
 O projeto é organizado conforme abaixo:
 
@@ -52,7 +52,7 @@ Uma breve descrição de arquivos e pastas:
 
 ## Requisitos
 
-* **python 3.4+**
+* **Python 3.4+**
 
   Para instalar ou atualizar, no Linux, use: `sudo apt-get install python`
   
@@ -62,7 +62,7 @@ Uma breve descrição de arquivos e pastas:
 
 * **venv**
 
-  No Ubuntu, o gerenciador de ambiente virtual não é instalado por padrão. Para instalar, use: `sudo apt-get install python3-venv`
+  No Ubuntu o gerenciador de ambiente virtual não é instalado por padrão. Para instalar, use: `sudo apt-get install python3-venv`
 
 
 
@@ -76,7 +76,7 @@ Faça o clone do repositório:
 
 Vá para a pasta da aplicação:
 
-`cd Aplicacao`
+`cd Aplicação`
 
 Crie um ambiente virtual:
 
