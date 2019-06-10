@@ -5,6 +5,8 @@ Define tabelas do banco de dados. Para criação do BD, execute o script 'create
 '''
 
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import generate_password_hash, check_password_hash
+
 
 db = SQLAlchemy()
 
@@ -23,3 +25,27 @@ class Livro(db.Model):
 
     def __repr__(self):
         return self.isbn
+
+class Funcionario(db.Model):
+    registro = db.Column(db.Integer, primary_key=True)
+    nome = db.Column(db.String)
+    usuario = db.Column(db.String, unique=True)
+    senha_hash = db.Column(db.String(128))
+    admin = db.Column(db.Boolean)
+
+    @property
+    def senha(self):
+        raise AttributeError('senha não é um atributo acessível')
+
+    @senha.setter
+    def senha(self, senha):
+        self.senha_hash = generate_password_hash(senha)
+
+    def verifica_senha(self, senha):
+        return check_password_hash(self.senha_hash, senha)
+
+    def __repr__(self):
+        return self.usuario
+
+
+
