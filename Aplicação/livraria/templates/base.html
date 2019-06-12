@@ -1,31 +1,31 @@
-<!DOCTYPE html>
-
 {% extends "bootstrap/base.html" %}
 
 {% block title %}Livraria do Amorim{% endblock %}
 
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 {% block navbar %}
-<nav class="navbar sticky-top navbar-light" style="background-color: #ffcc00;">
+<nav class="navbar navbar-light sticky-top navbar-md" style="background-color: #ffcc00; height: 65px">
     <div class="container">
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle"
+            <button type="button" class="navbar-toggle"  
             data-toggle="collapse" data-target=".navbar-collapse">
-                <span style="background-color: black" class="icon-bar"></span>
-                <span style="background-color: black" class="icon-bar"></span>
-                <span style="background-color: black" class="icon-bar"></span>
+                <span style="background-color: black; margin: 0; height:3px" class="icon-bar"></span>
+                <span style="background-color: black; margin: 1; height:3px" class="icon-bar"></span>
+                <span style="background-color: black; margin: 2; height:3px" class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/">Livraria do Amorim</a>
+            <a class="navbar-brand" style="margin: 30; font: ; size: " href="/">Livraria do Amorim</a>
         </div>
 
 		<div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
                 <!-- Item do menu -->
       			<li class="nav-item dropdown">
-        			<a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+        			<a class="nav-link dropdown-toggle display-1" style="height: 65px" href="#" data-toggle="dropdown">
           				Livros
         			</a>
         			<ul class="dropdown-menu">
-          			<li><a href="{{ url_for('consultar_livro') }}" >Consultar livro<br></a>
+          			<li><a href="{{ url_for('consultar_livro') }}">Consultar livro<br></a>
          			 	<li><a href="{{ url_for('cadastrar_livro') }}">Cadastrar livro<br></a>
          			 	<li><a href="{{ url_for('consulta_isbn', op='atualizar') }}">Atualizar livro<br></a>
          			 	<li><a href="{{ url_for('consulta_isbn', op='excluir') }}">Excluir livro<br></a>
@@ -33,7 +33,7 @@
       			</li>
       			<!-- Item do menu -->
       			<li class="nav-item dropdown">
-        			<a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+        			<a class="nav-link dropdown-toggle" style="height: 65px" href="#" data-toggle="dropdown">
           				Pedidos
         			</a>
         			<ul class="dropdown-menu">
@@ -45,7 +45,7 @@
       			</li>
       			<!-- Item do menu -->
       			<li class="nav-item dropdown">
-        			<a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+        			<a class="nav-link dropdown-toggle" style="height: 65px" href="#" data-toggle="dropdown">
           				Clientes
         			</a>
         			<ul class="dropdown-menu">
@@ -56,7 +56,7 @@
       			</li>
       			<!-- Item do menu -->
       			<li class="nav-item dropdown">
-        			<a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+        			<a class="nav-link dropdown-toggle" style="height: 65px" href="#" data-toggle="dropdown">
           				Admin
         			</a>
         			<ul class="dropdown-menu">
@@ -70,15 +70,19 @@
       		</ul>
       		<ul class="nav navbar-nav navbar-right">
       			<li class="nav-item dropdown">
-        			<a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
-          				Usuário
+        			<a class="nav-link dropdown-toggle" style="height: 65px" href="#" data-toggle="dropdown">
+          				{{ current_user.name }}
         			</a>
         			<ul class="dropdown-menu">
-          				<li><a href="#">Sair<br></a>
+                  {% if current_user.is_authenticated %}
+          				<li><a href="{{ url_for('login') }}">Sair<br></a>
+                  {% else %}
+                  <li><a href="{{ url_for('login') }}">Entrar<br></a>
+                  {% endif %}
 			        </ul>
       			</li>
+          </ul>
 
-            </ul>
         </div>   
     </div>
 </nav>
@@ -89,8 +93,6 @@
     {% block page_content %}{% endblock %}
 </div>
 {% endblock %}
-
-
 
 
 
