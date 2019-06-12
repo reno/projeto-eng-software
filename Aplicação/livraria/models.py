@@ -6,9 +6,15 @@ Define tabelas do banco de dados. Para criação do BD, execute o script 'create
 
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
-
+from flask_login import UserMixin
+from . import login_manager
 
 db = SQLAlchemy()
+
+@login_manager.user_loader
+def load_user(registro):
+    return Funcionario.query.get(int(registro))
+
 
 class Livro(db.Model):
     __tablename__ = "livros"
@@ -26,12 +32,15 @@ class Livro(db.Model):
     def __repr__(self):
         return self.isbn
 
-class Funcionario(db.Model):
+
+class Funcionario(UserMixin, db.Model):
+    __tablename__ = "funcionarios"
     registro = db.Column(db.Integer, primary_key=True)
     nome = db.Column(db.String)
     usuario = db.Column(db.String, unique=True)
     senha_hash = db.Column(db.String(128))
     admin = db.Column(db.Boolean)
+    __mapper_args__ = {'polymorphic_on': 'admin'}
 
     @property
     def senha(self):
@@ -48,4 +57,11 @@ class Funcionario(db.Model):
         return self.usuario
 
 
+class Vendedor(Funcionario):
+    __mapper_args__ = {'polymorphic_identity': 'vendedor'}
 
+
+class Admin(Funcionario):
+    __mapper_args__ = {'polymorphic_identity': 'admin'}
+
+# consultar usando query(Vendedor).filter_by() ou query.with_polymorphic()
