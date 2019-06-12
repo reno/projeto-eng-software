@@ -5,6 +5,7 @@ Define rotas da aplicação.
 '''
 
 from flask import Flask, render_template, redirect, url_for, request, session
+from flask_login import login_required
 from isbnlib import is_isbn10, is_isbn13, mask, canonical, meta
 from livraria.models import *
 from livraria.forms import *
@@ -12,12 +13,7 @@ from livraria.tables import *
 from livraria import app, views
 
 
-@app.route('/')
-def index():
-    return render_template('index.html', header='Bem vindo!')
-
-
-@app.route('/livros/consultar', methods=['GET', 'POST'])
+@app.route('/livro/consultar', methods=['GET', 'POST'])
 def consultar_livro():
     form = FormConsultaLivro()
     # ao enviar form, realiza consulta e renderiza resultados 
@@ -25,15 +21,15 @@ def consultar_livro():
         parametros = {form.campo.data: form.termo.data}
         resultado = Livro.query.filter_by(**parametros).all()
         tabela = TabelaLivros(resultado)
-        return render_template('livros/resultado.html', table=tabela)
+        return render_template('livro/resultado.html', table=tabela)
     # formulário ainda não enviado, renderiza página
     else:
-        return render_template('livro.html', form=form, header='Consultar livro')
+        return render_template('livro/livro.html', form=form, header='Consultar livro')
 
 
 @app.route('/livro/cadastrar', methods=['GET', 'POST'])
 def cadastrar_livro():
-    form = FormCadastroLivro()     
+    form = FormCadastroLivro()
     # ao enviar form, verifica se livro já existe no BD e cadastra
     if form.validate_on_submit():
         livro = Livro.query.filter_by(isbn=form.isbn.data).first()
@@ -49,7 +45,7 @@ def cadastrar_livro():
             return render_template('index.html', text='Livro {} cadastrado com sucesso.'.format(mask(livro)))
     # formulário ainda não enviado, renderiza página
     else:
-        return render_template('livros/cadastrar.html', form=form, header='Cadastrar livro')
+        return render_template('livro/cadastrar.html', form=form, header='Cadastrar livro')
 
 
 @app.route('/livro/cadastrar/meta', methods=['POST'])
@@ -81,7 +77,7 @@ def consulta_isbn(op):
             return redirect(url_for('excluir_livro', isbn=livro.isbn))
     # formulário ainda não enviado, renderiza página
     else: 
-        return render_template('livro.html', form=form_isbn, header='{} livro'.format(op.capitalize()))
+        return render_template('livro/livro.html', form=form_isbn, header='{} livro'.format(op.capitalize()))
 
     
 @app.route('/livro/atualizar/', methods=['GET', 'POST'])
@@ -98,10 +94,11 @@ def atualizar_livro():
         return render_template('index.html', text='Livro atualizado com sucesso.')  
     # formulário ainda não enviado, renderiza página
     else:
-        return render_template('livro.html', form=form_atualizacao) 
+        return render_template('livro/livro.html', form=form_atualizacao) 
 
 
 @app.route('/livro/excluir/', methods=['GET', 'POST'])
+@login_required
 def excluir_livro():
     isbn = request.args['isbn']
     resultado = Livro.query.filter_by(isbn=isbn).all()
@@ -113,5 +110,5 @@ def excluir_livro():
         db.session.commit()
         return render_template('index.html', text='Livro excluido com sucesso.')
     else:
-        return render_template('livros/excluir.html', table=tabela, form=confirmacao, header='Excluir livro')
+        return render_template('livro/excluir.html', table=tabela, form=confirmacao, header='Excluir livro')
 
