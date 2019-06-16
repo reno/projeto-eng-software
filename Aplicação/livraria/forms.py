@@ -5,12 +5,12 @@ Define formularios usados na aplicação.
 '''
 
 from flask_wtf import FlaskForm
-from wtforms import IntegerField, DecimalField, StringField, SubmitField, SelectField, PasswordField
+from wtforms import IntegerField, DecimalField, StringField, SubmitField, SelectField, BooleanField, PasswordField
 from wtforms.validators import DataRequired as Data, Email, Regexp, EqualTo, ValidationError
 from isbnlib import is_isbn10, is_isbn13
 from livraria.models import *
 
-MSG_USUARIO = 'O nome de usuário é deve conter apenas letras minúsculas, números e underscore.'
+MSG_USUARIO = 'O nome de usuário deve conter apenas letras minúsculas, números e underscore.'
 MSG_SENHA = 'As senhas precisam ser idênticas.'
 
 def isbn():
@@ -64,6 +64,7 @@ class FormCadastroVendedor(FlaskForm):
     usuario = StringField('Usuário', validators=[Data(), Regexp('^[a-z0-9_]+$', message=MSG_USUARIO)])
     senha  = PasswordField('Senha', validators=[Data(), EqualTo('confirma_senha', message=MSG_SENHA)])
     confirma_senha  = PasswordField('Confirme a senha', validators=[Data()])
+    admin = BooleanField('Conceder permissão de administrador.')
     submit = SubmitField('Registrar')
 
     def validate_usuario(self, field):
