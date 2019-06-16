@@ -7,8 +7,8 @@ Instancia app, para desenvolvimento. Recebe argumento ('dev', 'testes' ou 'produ
 import click
 from sys import argv
 import livraria
-#if argv[1]: livraria.set_config(argv[1])
-livraria.set_config('base')
+if argv[1]: livraria.set_config(argv[1])
+#livraria.set_config('base')
 from livraria import app
 
 
