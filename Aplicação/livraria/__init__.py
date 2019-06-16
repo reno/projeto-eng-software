@@ -24,4 +24,4 @@ def set_config(ambiente):
 # executado na importação:
 app = Flask(__name__)
 app.config.from_object(config['base'])
-from .views import principal, livro
+from .views import principal, livro, admin
