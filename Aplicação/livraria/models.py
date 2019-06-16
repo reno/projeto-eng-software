@@ -33,9 +33,12 @@ class Livro(db.Model):
         return self.isbn
 
 
+ADMIN = True
+VENDEDOR = False
+
 class Funcionario(UserMixin, db.Model):
     __tablename__ = "funcionarios"
-    registro = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     nome = db.Column(db.String)
     usuario = db.Column(db.String, unique=True)
     senha_hash = db.Column(db.String(128))
@@ -53,15 +56,22 @@ class Funcionario(UserMixin, db.Model):
     def verifica_senha(self, senha):
         return check_password_hash(self.senha_hash, senha)
 
+    def is_admin(self):
+        return self.admin
+
     def __repr__(self):
         return self.usuario
 
 
 class Vendedor(Funcionario):
-    __mapper_args__ = {'polymorphic_identity': 'vendedor'}
+    __mapper_args__ = {'polymorphic_identity': VENDEDOR}
 
 
 class Admin(Funcionario):
-    __mapper_args__ = {'polymorphic_identity': 'admin'}
+    __mapper_args__ = {'polymorphic_identity': ADMIN}
 
 # consultar usando query(Vendedor).filter_by() ou query.with_polymorphic()
+
+@login_manager.user_loader
+def load_user(user_id):
+    return Funcionario.query.get(int(user_id))
