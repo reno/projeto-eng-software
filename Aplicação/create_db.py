@@ -15,7 +15,11 @@ db.init_app(app)  # inicializado em models.py
 
 def main():
     db.create_all()
+    admin = Funcionario(nome='Administrador', usuario='admin', senha='admin', admin=True)
+    db.session.add(admin)
+    db.session.commit()
     print('BD criado com sucesso.')
+
 
 if __name__ == "__main__":
     with app.app_context():
