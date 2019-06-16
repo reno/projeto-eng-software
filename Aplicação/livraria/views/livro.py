@@ -1,7 +1,7 @@
 '''
-livraria/views.py
+livraria/views/livro.py
 
-Define rotas da aplicação.
+Define rotas do menu Livro.
 '''
 
 from flask import Flask, render_template, redirect, url_for, request, session
@@ -14,6 +14,7 @@ from livraria import app, views
 
 
 @app.route('/livro/consultar', methods=['GET', 'POST'])
+@login_required
 def consultar_livro():
     form = FormConsultaLivro()
     # ao enviar form, realiza consulta e renderiza resultados 
@@ -28,6 +29,7 @@ def consultar_livro():
 
 
 @app.route('/livro/cadastrar', methods=['GET', 'POST'])
+@login_required
 def cadastrar_livro():
     form = FormCadastroLivro()
     # ao enviar form, verifica se livro já existe no BD e cadastra
@@ -49,6 +51,7 @@ def cadastrar_livro():
 
 
 @app.route('/livro/cadastrar/meta', methods=['POST'])
+@login_required
 def prencher_metadados():
     isbn = request.form['isbn']
     #with meta(isbn) as data:
@@ -64,6 +67,7 @@ def prencher_metadados():
 
 
 @app.route('/livro/<op>/consulta', methods=['GET', 'POST'])
+@login_required
 def consulta_isbn(op):
     form_isbn = FormConsultaIsbn()
     # consulta realizada, redireciona conforme operação 
@@ -81,6 +85,7 @@ def consulta_isbn(op):
 
     
 @app.route('/livro/atualizar/', methods=['GET', 'POST'])
+@login_required
 def atualizar_livro(): 
     isbn = request.args['isbn']
     livro = Livro.query.filter_by(isbn=isbn).first()
