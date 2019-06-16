@@ -5,26 +5,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 {% block navbar %}
-<nav class="navbar navbar-light sticky-top navbar-md" style="background-color: #ffcc00; height: 65px">
+<nav class="navbar navbar-light sticky-top navbar-lg" style="background-color: #ffcc00;">
     <div class="container">
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle"  
-            data-toggle="collapse" data-target=".navbar-collapse">
-                <span style="background-color: black; margin: 0; height:3px" class="icon-bar"></span>
-                <span style="background-color: black; margin: 1; height:3px" class="icon-bar"></span>
-                <span style="background-color: black; margin: 2; height:3px" class="icon-bar"></span>
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+              <span style="background-color: black; margin: 0; height:3px" class="icon-bar"></span>
+              <span style="background-color: black; margin: 1; height:3px" class="icon-bar"></span>
+              <span style="background-color: black; margin: 2; height:2.5px" class="icon-bar"></span>  
             </button>
-            <a class="navbar-brand" style="margin: 30; font: ; size: " href="/">Livraria do Amorim</a>
+            <a class="navbar-brand" style="color: black; font-family:Georgia,serif; font-size:22px; margin-top: 0.4em;" href="/">Livraria do Amorim</a>
         </div>
-
+    {% if current_user.is_authenticated %}
 		<div class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
+            <ul class="nav navbar-nav" style="font-color:black; font-size:17px; margin-top: 0.5em">
                 <!-- Item do menu -->
       			<li class="nav-item dropdown">
-        			<a class="nav-link dropdown-toggle display-1" style="height: 65px" href="#" data-toggle="dropdown">
-          				Livros
+        			<a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+          				<font color="black"> Livros </font>
         			</a>
-        			<ul class="dropdown-menu">
+        			<ul class="dropdown-menu" style="font-size:15px">
           			<li><a href="{{ url_for('consultar_livro') }}">Consultar livro<br></a>
          			 	<li><a href="{{ url_for('cadastrar_livro') }}">Cadastrar livro<br></a>
          			 	<li><a href="{{ url_for('consulta_isbn', op='atualizar') }}">Atualizar livro<br></a>
@@ -33,10 +32,10 @@
       			</li>
       			<!-- Item do menu -->
       			<li class="nav-item dropdown">
-        			<a class="nav-link dropdown-toggle" style="height: 65px" href="#" data-toggle="dropdown">
-          				Pedidos
+        			<a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+          				<font color="black"> Pedidos </font>
         			</a>
-        			<ul class="dropdown-menu">
+        			<ul class="dropdown-menu" style="font-size:15px">
           				<li><a href="#">Novo pedido<br></a>
          			 	<li><a href="#">Consultar pedidos<br></a>
          			 	<li><a href="#">Atualizar pedido<br></a>
@@ -45,50 +44,52 @@
       			</li>
       			<!-- Item do menu -->
       			<li class="nav-item dropdown">
-        			<a class="nav-link dropdown-toggle" style="height: 65px" href="#" data-toggle="dropdown">
-          				Clientes
+        			<a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+          				<font color="black"> Clientes </font>
         			</a>
-        			<ul class="dropdown-menu">
+        			<ul class="dropdown-menu" style="font-size:15px">
           				<li><a href="#">Consultar cliente<br></a>
          			 	<li><a href="#">Novo cliente<br></a>
          			 	<li><a href="#">Atualizar cliente<br></a>
 			        </ul>
       			</li>
+            {% if current_user.admin %}
       			<!-- Item do menu -->
       			<li class="nav-item dropdown">
-        			<a class="nav-link dropdown-toggle" style="height: 65px" href="#" data-toggle="dropdown">
-          				Admin
+        			<a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+          				<font color="black"> Admin </font>
         			</a>
-        			<ul class="dropdown-menu">
+        			<ul class="dropdown-menu" style="font-size:15px">
           				<li><a href="#">Consultar vendedor<br></a>
-         			 	<li><a href="#">Cadastrar vendedor<br></a>
+         			 	<li><a href="{{ url_for('cadastrar_vendedor') }}">Cadastrar vendedor<br></a>
          			 	<li><a href="#">Atualizar vendedor<br></a>
          			 	<li><a href="#">Excluir vendedor<br></a>
          			 	<li><a href="#">Excluir cliente<br></a>
 			        </ul>
       			</li>
+            {% endif %}
       		</ul>
-      		<ul class="nav navbar-nav navbar-right">
+      		<ul class="nav navbar-nav navbar-right" style="font-size:17px; margin-top: 0.5em">
       			<li class="nav-item dropdown">
-        			<a class="nav-link dropdown-toggle" style="height: 65px" href="#" data-toggle="dropdown">
-          				{{ current_user.name }}
+        			<a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+                  <font color="black"> {{ current_user.nome }} </font>
         			</a>
         			<ul class="dropdown-menu">
-                  {% if current_user.is_authenticated %}
-          				<li><a href="{{ url_for('login') }}">Sair<br></a>
-                  {% else %}
-                  <li><a href="{{ url_for('login') }}">Entrar<br></a>
+                  {% if current_user.admin %} 
+                  <li><a href="#">Atualizar dados<br></a>
                   {% endif %}
-			        </ul>
+          				<li><a href="{{ url_for('logout') }}">Sair<br></a>
+              </ul>			        
       			</li>
           </ul>
-
         </div>   
     </div>
+    {% endif %}
 </nav>
 {% endblock %}
 
 {% block content %}
+<br>
 <div class="container">
     {% block page_content %}{% endblock %}
 </div>
