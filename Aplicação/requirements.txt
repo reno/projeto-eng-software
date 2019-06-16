@@ -4,9 +4,11 @@ dominate==2.3.5
 Flask==1.0.3
 Flask-Babel==0.12.2
 Flask-Bootstrap==3.3.7.1
+Flask-Login==0.4.1
 Flask-SQLAlchemy==2.4.0
 Flask-Table==0.5.0
 Flask-WTF==0.14.2
+isbnlib==3.9.8
 itsdangerous==1.1.0
 Jinja2==2.10.1
 MarkupSafe==1.1.1
