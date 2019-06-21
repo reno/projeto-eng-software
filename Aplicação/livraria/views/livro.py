@@ -8,9 +8,9 @@ from flask import Flask, render_template, redirect, url_for, request, session
 from flask_login import login_required
 from isbnlib import is_isbn10, is_isbn13, mask, canonical, meta
 from livraria.models import *
-from livraria.forms import *
 from livraria.tables import *
-from livraria import app, views
+from livraria.forms.livro import *
+from livraria import app #, views
 
 
 @app.route('/livro/consultar', methods=['GET', 'POST'])
@@ -51,7 +51,6 @@ def cadastrar_livro():
 
 
 @app.route('/livro/cadastrar/meta', methods=['POST'])
-@login_required
 def prencher_metadados():
     isbn = request.form['isbn']
     #with meta(isbn) as data:
@@ -68,7 +67,7 @@ def prencher_metadados():
 
 @app.route('/livro/<op>/consulta', methods=['GET', 'POST'])
 @login_required
-def consulta_isbn(op):
+def consultar_isbn(op):
     form_isbn = FormConsultaIsbn()
     # consulta realizada, redireciona conforme operação 
     if form_isbn.validate_on_submit():
@@ -116,4 +115,3 @@ def excluir_livro():
         return render_template('index.html', text='Livro excluido com sucesso.')
     else:
         return render_template('livro/excluir.html', table=tabela, form=confirmacao, header='Excluir livro')
-
