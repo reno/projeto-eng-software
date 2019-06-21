@@ -6,10 +6,10 @@ Define rotas comuns a aplicação.
 
 from flask import Flask, render_template, redirect, url_for, flash
 from flask_login import login_user, logout_user, login_required, current_user
-from livraria import app, views
+from livraria import app #, views
 from livraria.models import *
-from livraria.forms import *
 from livraria.tables import *
+from livraria.forms.principal import *
 
 
 @app.route('/')
