@@ -14,6 +14,9 @@ class Config:
     SECRET_KEY = 'string de verificacao do flask-wtf'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_DATABASE_URI = POSTGRE
+    WTF_CSRF_SECRET_KEY = 'string de verificacao do flask-wtf'
+    WTF_CSRF_ENABLED = True
+
 
 class ConfigDesenvolvimento(Config):
     SERVER_NAME = 'localhost:5000'
