@@ -4,13 +4,28 @@ livraria/views/admin.py
 Define rotas do menu Admin.
 '''
 
-from flask import Flask, render_template, url_for, flash
-from flask_login import login_required
-from livraria import app, views
+from flask import Flask, render_template, redirect, url_for, request, flash
+from flask_login import login_required, current_user
+from livraria import app #, views
 from livraria.models import *
-from livraria.forms import *
 from livraria.tables import *
+from livraria.forms.admin import *
 from livraria.decorators import admin_required
+
+
+@app.route('/admin/consultar_vendedor', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def consultar_vendedor():
+    form = FormConsultaVendedor()
+    # ao enviar form, realiza consulta e renderiza resultados
+    if form.validate_on_submit():
+        parametros = {form.campo.data: form.termo.data}
+        resultado = Vendedor.query.filter_by(**parametros).all()
+        tabela = TabelaFuncionarios(resultado)
+        return render_template('admin/resultado.html', table=tabela)
+    # formulário ainda não enviado, renderiza página
+    return render_template('admin/admin.html', form=form, header='Consultar vendedor')
 
 
 @app.route('/admin/cadastrar_vendedor', methods=['GET', 'POST'])
@@ -32,3 +47,82 @@ def cadastrar_vendedor():
     # formulário ainda não enviado, renderiza página
     else:
         return render_template('admin/admin.html', form=form, header='Cadastrar vendedor')
+
+@app.route('/admin/<op>/consulta', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def consultar_registro(op):
+    form_registro = FormConsultaId()
+    # consulta realizada, redireciona conforme operação 
+    if form_registro.validate_on_submit():
+        funcionario = Funcionario.query.filter_by(id=form_registro.id.data).first()
+        if funcionario is None:
+            return render_template('admin/admin.html', text='Nenhum funcionário encontrado.')    
+        if op == 'atualizar':
+            return redirect(url_for('atualizar_vendedor', id=funcionario.id))
+        else:
+            return redirect(url_for('excluir_vendedor', id=funcionario.id))
+    # formulário ainda não enviado, renderiza página
+    else: 
+        return render_template('admin/admin.html', form=form_registro, header='{} vendedor'.format(op.capitalize()))
+
+
+@app.route('/admin/atualizar_dados')
+@login_required
+@admin_required
+def atualizar_dados():
+    return redirect(url_for('atualizar_vendedor', id=current_user.id))
+
+
+@app.route('/admin/atualizar_vendedor', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def atualizar_vendedor():
+    registro = request.args['id']
+    funcionario = Funcionario.query.filter_by(id=registro).first()
+    print('VENDEDOR', registro, funcionario)
+    form_atualizacao = FormCadastroVendedor(obj=funcionario)
+    form_atualizacao.populate_obj(funcionario)
+    if form_atualizacao.validate_on_submit():
+        dados = {k: v for k, v in form_atualizacao.data.items()
+                 if k not in {'submit','csrf_token'}}
+        funcionario.data = dados 
+        db.session.commit()
+        return render_template('admin/admin.html', text='Vendedor atualizado com sucesso.')  
+    # formulário ainda não enviado, renderiza página
+    else:
+        return render_template('admin/admin.html', form=form_atualizacao)
+
+
+@app.route('/admin/excluir_vendedor', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def excluir_vendedor():
+    registro = request.args['id']
+    resultado = Livro.query.filter_by(id=registro).all()
+    tabela = TabelaFuncionarios(resultado)
+    funcionario = resultado[0]
+    confirmacao = FormExclusaoLivro()
+    if confirmacao.validate_on_submit():
+        db.session.delete(funcionario)
+        db.session.commit()
+        return render_template('admin/admin.html', text='Vendedor excluido com sucesso.')
+    else:
+        return render_template('admin/excluir.html', table=tabela, form=confirmacao, header='Excluir vendedor')
+
+
+@app.route('/admin/excluir_cliente', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def excluir_cliente():
+    documento = request.args['doc']
+    resultado = Cliente.query.filter_by(documento=documento).all()
+    tabela = TabelaClientes(resultado)
+    cliente = resultado[0]
+    confirmacao = FormExclusaoCliente()
+    if confirmacao.validate_on_submit():
+        db.session.delete(cliente)
+        db.session.commit()
+        return render_template('admin/admin.html', text='Cliente excluido com sucesso.')
+    else:
+        return render_template('admin/excluir.html', table=tabela, form=confirmacao, header='Excluir cliente')
