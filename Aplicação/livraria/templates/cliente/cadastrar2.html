@@ -1,0 +1,35 @@
+
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block page_content %}
+<div>
+    <h1>{{ header }}</h1>
+</div>
+<br>
+<div>
+	{{ wtf.form_field(form.nome) }}
+	{{ wtf.form_field(form.documento) }}
+	{{ wtf.form_field(form.data_nascimento) }}
+	<div class="row">
+		<div class="col-xs-9">
+			{{ wtf.form_field(form.endereco.logradouro) }}
+			{{ wtf.form_field(form.endereco.bairro) }}
+			{{ wtf.form_field(form.endereco.cidade) }}
+		</div>
+		<div class="col-xs-3">
+			{{ wtf.form_field(form.endereco.numero) }}
+			{{ wtf.form_field(form.endereco.complemento) }}
+			{{ wtf.form_field(form.endereco.estado) }}
+		</div>
+	</div>	
+	{{ wtf.form_field(form.endereco.cep) }}
+	{{ wtf.form_field(form.telefone) }}
+	{{ wtf.form_field(form.email) }}
+	<br>
+	{{ wtf.form_field(form.submit) }}
+	</div>
+<div>
+	<p>{{ text }}</p>
+</div>
+{% endblock %}
