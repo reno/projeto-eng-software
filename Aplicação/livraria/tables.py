@@ -7,6 +7,7 @@ Define tabelas usadas no resultado das consultas.
 from flask_table import Table, Col
 from isbnlib import mask
 
+
 class IsbnCol(Col):
     def td_format(self, content):
         try:
@@ -36,3 +37,27 @@ class TabelaLivros(Table):
     ano = Col('Ano')
     preco = PriceCol('Preço')
     exemplares = Col('Exemplares')
+
+
+class TabelaClientes(Table):
+    classes = ['table', 'table-striped', 'col-lg-3']
+    id = Col('ID', show=False)
+    nome = Col('Nome')
+    documento = Col('Documento')
+    data_nascimento = Col('Data de nasc.')
+    endereco = Col('Endereço')
+    telefone = Col('Telefone')
+    email = Col('E-mail')
+
+
+class TabelaFuncionarios(Table):
+    classes = ['table', 'table-striped', 'col-lg-3']
+    id = Col('Registro')
+    nome = Col('Nome')
+    usuario = Col('Usuário')
+
+    
+class TabelaPedidos(Table):
+    classes = ['table', 'table-striped', 'col-lg-3']
+    id = Col('ID', show=False)
+    pass
