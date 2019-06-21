@@ -14,6 +14,7 @@ app.config.from_object(config[argv[1] or 'dev'])
 db.init_app(app)  # inicializado em models.py 
 
 def main():
+    db.drop_all()
     db.create_all()
     admin = Funcionario(nome='Administrador', usuario='admin', senha='admin', admin=True)
     db.session.add(admin)
