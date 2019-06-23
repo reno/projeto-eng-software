@@ -53,7 +53,7 @@ def cadastrar_cliente():
 @app.route('/cliente/<op>/consulta', methods=['GET', 'POST'])
 @login_required
 def consultar_documento(op):
-    form = FormConsultaPedido()
+    form = FormConsultaDocumento()
     # consulta realizada, redireciona conforme operação 
     if form.validate_on_submit():
         cliente = Cliente.query.filter_by(documento=form.pedido.data).first()
@@ -65,7 +65,7 @@ def consultar_documento(op):
             return redirect(url_for('excluir_cliente', doc=cliente.documento))
     # formulário ainda não enviado, renderiza página
     else:
-        return render_template('cliente/cadastrar.html', form=form_documento, header='{} cliente'.format(op.capitalize()))
+        return render_template('cliente/cadastrar.html', form=form, header='{} cliente'.format(op.capitalize()))
 
 
 @app.route('/cliente/atualizar', methods=['GET', 'POST'])
