@@ -5,7 +5,7 @@ Define formularios usados no menu Admin.
 '''
 
 from flask_wtf import FlaskForm
-from wtforms import IntegerField, DecimalField, StringField, SubmitField, SelectField, BooleanField, PasswordField
+from wtforms import IntegerField, DecimalField, StringField, SubmitField, SelectField, BooleanField, PasswordField, HiddenField
 from wtforms.validators import DataRequired as Data, Email, Regexp, EqualTo, ValidationError
 from isbnlib import is_isbn10, is_isbn13
 from livraria.models import *
@@ -35,6 +35,21 @@ class FormCadastroVendedor(FlaskForm):
         if Funcionario.query.filter_by(usuario=field.data).first():
             raise ValidationError('Nome de usuário já utilizado.')
 
+class FormAtualizacaoVendedor(FlaskForm):
+    id = HiddenField(validators=[Data()])
+    nome = StringField('Nome', validators=[Data()])
+    usuario = StringField('Usuário', validators=[Data(), Regexp('^[a-z0-9_]+$', message=MSG_USUARIO)])
+    #senha_atual = PasswordField('Senha', validators=[Data()])
+    nova_senha = PasswordField('Nova senha', description='Opcional', validators=[EqualTo('confirma_senha', message=MSG_SENHA)])
+    confirma_senha = PasswordField('Confirme a senha')
+    #admin = HiddenField()
+    submit = SubmitField('Atualizar')
+    '''
+    def validate_senha_atual(self, field):
+        f = Funcionario.query.filter_by(id=self.id).first()
+        if not f.verifica_senha(field.data):
+            raise ValidationError('Senha incorreta.')
+    '''
 
 class FormConsultaId(FlaskForm):
     id = StringField('Nº registro', validators=[Data()])
