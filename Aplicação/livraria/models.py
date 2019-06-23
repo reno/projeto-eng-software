@@ -38,7 +38,6 @@ class Funcionario(UserMixin, db.Model):
     usuario = db.Column(db.String, unique=True)
     senha_hash = db.Column(db.String(128))
     admin = db.Column(db.Boolean)
-    id_pedido = db.Column(db.Integer, db.ForeignKey('pedidos.id'))
     __mapper_args__ = {'polymorphic_on': 'admin'}
 
     @property
@@ -59,8 +58,8 @@ class Funcionario(UserMixin, db.Model):
         return self.usuario
 
 
-ADMIN = True
 VENDEDOR = False
+ADMIN = True
 
 class Vendedor(Funcionario):
     __mapper_args__ = {'polymorphic_identity': VENDEDOR}
@@ -80,10 +79,10 @@ class Cliente(db.Model):
     nome = db.Column(db.String, nullable=False)
     documento = db.Column(db.String, nullable=False)
     data_nascimento = db.Column(db.Date, nullable=False)
-    endereco = db.relationship('Endereco', cascade="all,delete", backref='cliente', lazy=True, uselist=False)
+    endereco = db.relationship('Endereco', cascade="all,delete",
+                               backref='cliente', lazy=True, uselist=False)
     telefone = db.Column(db.String, nullable=False)
     email = db.Column(db.String, nullable=False)
-    id_pedido = db.Column(db.Integer, db.ForeignKey('pedidos.id'))
 
     def __repr__(self):
         return self.documento
@@ -99,7 +98,8 @@ class Endereco(db.Model):
     cidade = db.Column(db.String, nullable=False)
     estado = db.Column(db.String, nullable=False)
     cep = db.Column(db.String, nullable=False)
-    id_cliente = db.Column(db.Integer, db.ForeignKey('clientes.id'), nullable=False)
+    id_cliente = db.Column(db.Integer, db.ForeignKey('clientes.id'),
+                           nullable=False)
     
     def __repr__(self):
         return '{}, {} {}, {} - {}'.format(self.logradouro, self.numero,
@@ -107,12 +107,26 @@ class Endereco(db.Model):
                                            self.cidade)
 
 
+pedidos_cliente = db.Table('pedidos_cliente',
+    db.Column('id_pedido', db.Integer, db.ForeignKey('pedidos.id')),
+    db.Column('id_cliente', db.Integer, db.ForeignKey('clientes.id'))
+)
+
+pedidos_vendedor = db.Table('pedidos_vendedor',
+    db.Column('id_pedido', db.Integer, db.ForeignKey('pedidos.id')),
+    db.Column('id_vendedor', db.Integer, db.ForeignKey('funcionarios.id'))
+)
+
+
 class Pedido(db.Model):
     __tablename__ = "pedidos"
     id = db.Column(db.Integer, primary_key=True)
-    itens = db.relationship('ItemPedido', backref='pedidos', lazy=True, cascade='all, delete')
-    cliente = db.relationship('Cliente', backref='pedido', lazy=True, uselist=False)
-    vendedor = db.relationship('Funcionario', backref='pedido', lazy=True, uselist=False)
+    itens = db.relationship('ItemPedido', backref='pedidos', lazy=True,
+                            cascade='all, delete')
+    cliente = db.relationship('Cliente', secondary=pedidos_cliente,
+                              backref='pedidos', lazy=True, uselist=False)
+    vendedor = db.relationship('Funcionario', secondary=pedidos_vendedor,
+                               backref='pedidos', lazy=True, uselist=False)
     desconto = db.Column(db.Float, default=0, nullable=False)
     total = db.Column(db.Float)
     ativo = db.Column(db.Boolean, default=True)
@@ -123,12 +137,13 @@ class Pedido(db.Model):
 
 class ItemPedido(db.Model):
     __tablename__ = "itens_pedido"
-    id_pedido = db.Column(db.Integer, db.ForeignKey('pedidos.id'), primary_key=True)
-    id_livro = db.Column(db.Integer, db.ForeignKey('livros.id'), primary_key=True)
+    id_pedido = db.Column(db.Integer, db.ForeignKey('pedidos.id'),
+                          primary_key=True)
+    id_livro = db.Column(db.Integer, db.ForeignKey('livros.id'),
+                         primary_key=True)
     quantidade = db.Column(db.Integer, nullable=False)
     livro = db.relationship('Livro', backref='pedido')
     pedido = db.relationship('Pedido', backref='livro')
 
     def __repr__(self):
         return f'{self.livro} {self.quantidade}'
-
