@@ -16,8 +16,8 @@ MSG_CEP = 'Informe apenas números'
 
 class FormConsultaCliente(FlaskForm):
     opcoes = [(atr, atr.capitalize()) for atr in dir(Cliente)
-              if atr is not 'id' and not atr.startswith(('_', 'm', 'q', 'data'))]
-    opcoes.insert(0, ('data_nascimento', 'Data de nascimento'))
+              if not atr.startswith(('_', 'id', 'm', 'q', 'data'))]
+    #opcoes.insert(0, ('data_nascimento', 'Data de nascimento'))
     campo = SelectField('Campo de busca', choices=opcoes)  
     termo = StringField('Palavra-chave', validators=[Data()])
     submit = SubmitField('Consultar')
