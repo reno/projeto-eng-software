@@ -36,10 +36,10 @@
           				<font color="black"> Pedidos </font>
         			</a>
         			<ul class="dropdown-menu" style="font-size:15px">
-          				<li><a href="{{ url_for('cadastrar_pedido') }}">Novo pedido<br></a>
-         			 	<li><a href="{{ url_for('consultar_pedido') }}">Consultar pedidos<br></a>
-         			 	<li><a href="{{ url_for('atualizar_pedido') }}">Atualizar pedido<br></a>
-         			 	<li><a href="{{ url_for('cancelar_pedido') }}">Cancelar pedido<br></a>
+                <li><a href="{{ url_for('consultar_pedido') }}">Consultar pedidos<br></a>
+          			<li><a href="{{ url_for('cadastrar_pedido') }}">Cadastrar pedido<br></a>
+         			 	<li><a href="{{ url_for('consultar_id', op='atualizar') }}">Atualizar pedido<br></a>
+         			 	<li><a href="{{ url_for('consultar_id', op='cancelar') }}">Cancelar pedido<br></a>
 			        </ul>
       			</li>
       			<!-- Item do menu -->
@@ -49,7 +49,7 @@
         			</a>
         			<ul class="dropdown-menu" style="font-size:15px">
           				<li><a href="{{ url_for('consultar_cliente') }}">Consultar cliente<br></a>
-         			 	<li><a href="{{ url_for('cadastrar_cliente') }}">Novo cliente<br></a>
+         			 	<li><a href="{{ url_for('cadastrar_cliente') }}">Cadastrar cliente<br></a>
          			 	<li><a href="{{ url_for('consultar_documento', op='atualizar') }}">Atualizar cliente<br></a>
 			        </ul>
       			</li>
