@@ -25,6 +25,7 @@ class Livro(db.Model):
     idioma = db.Column(db.String, nullable=False)
     preco = db.Column(db.Float, nullable=False)
     exemplares = db.Column(db.Integer, nullable=False)
+    pedidos = db.relationship('ItemPedido', backref='livros')
 
     def __repr__(self):
         return self.isbn
@@ -37,6 +38,7 @@ class Funcionario(UserMixin, db.Model):
     usuario = db.Column(db.String, unique=True)
     senha_hash = db.Column(db.String(128))
     admin = db.Column(db.Boolean)
+    id_pedido = db.Column(db.Integer, db.ForeignKey('pedidos.id'))
     __mapper_args__ = {'polymorphic_on': 'admin'}
 
     @property
@@ -56,6 +58,7 @@ class Funcionario(UserMixin, db.Model):
     def __repr__(self):
         return self.usuario
 
+
 ADMIN = True
 VENDEDOR = False
 
@@ -64,6 +67,7 @@ class Vendedor(Funcionario):
 
 class Admin(Funcionario):
     __mapper_args__ = {'polymorphic_identity': ADMIN}
+
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -79,6 +83,7 @@ class Cliente(db.Model):
     endereco = db.relationship('Endereco', cascade="all,delete", backref='cliente', lazy=True, uselist=False)
     telefone = db.Column(db.String, nullable=False)
     email = db.Column(db.String, nullable=False)
+    id_pedido = db.Column(db.Integer, db.ForeignKey('pedidos.id'))
 
     def __repr__(self):
         return self.documento
@@ -96,35 +101,34 @@ class Endereco(db.Model):
     cep = db.Column(db.String, nullable=False)
     id_cliente = db.Column(db.Integer, db.ForeignKey('clientes.id'), nullable=False)
     
-
-itens_pedido = db.Table('itens_pedido',
-    db.Column('id_livro', db.Integer, db.ForeignKey('livros.id'), primary_key=True),
-    db.Column('quantidade', db.Integer),
-    db.Column('id_pedido', db.Integer, db.ForeignKey('pedidos.id'), primary_key=True)
-)
+    def __repr__(self):
+        return '{}, {} {}, {} - {}'.format(self.logradouro, self.numero,
+                                           self.complemento, self.bairro,
+                                           self.cidade)
 
 
 class Pedido(db.Model):
     __tablename__ = "pedidos"
     id = db.Column(db.Integer, primary_key=True)
-    itens = db.relationship('Livro', secondary=itens_pedido, lazy='subquery',
-                            backref=db.backref('pedidos', lazy=True))
-    #id_item = db.Column(db.ARRAY(db.Integer), db.ForeignKey('itens_pedido.id'))
-    id_cliente = db.Column(db.Integer, db.ForeignKey('clientes.id'))
-    id_vendedor = db.Column(db.Integer, db.ForeignKey('funcionarios.id'))
-    desconto = db.Column(db.Float, nullable=False)
-    _valor_total = db.Column(db.Float, nullable=False)
-    ativo = db.Column(db.Boolean)
+    itens = db.relationship('ItemPedido', backref='pedidos', lazy=True, cascade='all, delete')
+    cliente = db.relationship('Cliente', backref='pedido', lazy=True, uselist=False)
+    vendedor = db.relationship('Funcionario', backref='pedido', lazy=True, uselist=False)
+    desconto = db.Column(db.Float, default=0, nullable=False)
+    total = db.Column(db.Float)
+    ativo = db.Column(db.Boolean, default=True)
 
-    '''
-    @hybrid_property
-    def valor_total(self):
-        _valor_total = sum([valor_item(i) for i in id_item])
-
-    #@valor_item.expression
-    def valor_item(id_item):
-        return ItemPedido.query.get(id_item).quantidade * Livro.query.get(id_item).preco
-    '''
     def __repr__(self):
-        return self.id
+        return str(self.id)
+
+
+class ItemPedido(db.Model):
+    __tablename__ = "itens_pedido"
+    id_pedido = db.Column(db.Integer, db.ForeignKey('pedidos.id'), primary_key=True)
+    id_livro = db.Column(db.Integer, db.ForeignKey('livros.id'), primary_key=True)
+    quantidade = db.Column(db.Integer, nullable=False)
+    livro = db.relationship('Livro', backref='pedido')
+    pedido = db.relationship('Pedido', backref='livro')
+
+    def __repr__(self):
+        return f'{self.livro} {self.quantidade}'
 
