@@ -5,7 +5,7 @@ Define formularios usados no menu Clientes.
 '''
 
 from flask_wtf import FlaskForm
-from wtforms import IntegerField, DecimalField, StringField, SubmitField, SelectField, FormField, DateField, HiddenField 
+from wtforms import StringField, DateField, SelectField, FormField, SubmitField
 from wtforms.validators import DataRequired as Data, Email, Regexp
 from livraria.models import *
 
