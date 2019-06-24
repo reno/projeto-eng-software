@@ -5,6 +5,7 @@ Define formularios usados no menu Pedidos.
 '''
 
 from flask_wtf import FlaskForm
+from flask_login import current_user
 from wtforms import IntegerField, DecimalField, StringField, SubmitField, SelectField, FieldList, FormField, BooleanField, HiddenField
 from wtforms.validators import DataRequired as Data, Email, Regexp, ValidationError
 from isbnlib import is_isbn10, is_isbn13
@@ -33,6 +34,36 @@ class FormCadastroPedido(FlaskForm):
     def validate_cliente(self, field):
         if Cliente.query.filter_by(documento=field.data).first() is None:
             raise ValidationError('Cliente não encontrado.')
+
+
+class FormAtualizacaoPedido(FlaskForm):
+    id = HiddenField()
+    cliente = StringField('Cliente', validators=[Data()])
+    itens = FieldList(FormField(FormItensPedido))
+    vendedor = HiddenField()
+    desconto = StringField('Desconto', validators=[Data()])
+    total = HiddenField()
+    submit = SubmitField('Cadastrar')
+
+    def validate_cliente(self, field):
+        if Cliente.query.filter_by(documento=field.data).first() is None:
+            raise ValidationError('Cliente não encontrado.')
+
+    def populate(self, pedido):
+        i = 0
+        cliente = Cliente.query.filter_by(documento=self.cliente.data).first()
+        pedido.cliente = cliente
+        vendedor = Funcionario.query.filter_by(id=current_user.id).first()
+        pedido.vendedor = vendedor
+        pedido.desconto = self.desconto.data
+        total = 0
+        for item in pedido.itens:
+            livro = Livro.query.filter_by(isbn=self.itens[i].livro.data).first()
+            item.livro = livro
+            item.quantidade = self.itens[i].quantidade.data
+            total += livro.preco * item.quantidade
+            i += 1
+        pedido.total = total
 
 
 class FormConsultaPedido(FlaskForm):
