@@ -23,7 +23,10 @@ class TitleCol(Col):
 
 class PriceCol(Col):
     def td_format(self, content):
-        return 'R$ {:5.2f}'.format(content)
+        try:
+            return 'R$ {:5.2f}'.format(content)
+        except:
+            return content
 
 
 class EditionCol(Col):
