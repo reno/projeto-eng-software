@@ -30,7 +30,7 @@ def consultar_pedido():
             vendedor = Funcionario.query.filter_by(usuario=form.termo.data).first()
             if vendedor is None:
                 return render_template('pedido/index.html',
-                                       text='Vendedor não encontrado.')
+                       text='Vendedor não encontrado.')
             parametros = {'id_vendedor': vendedor.id}
         else:  # pesquisa por id
             parametros = {'id': form.termo.data}
@@ -43,7 +43,7 @@ def consultar_pedido():
     # formulário ainda não enviado, renderiza página
     else:
         return render_template('pedido/consultar.html', form=form,
-                               header='Consultar pedido')
+               header='Consultar pedido')
 
 
 @app.route('/pedido/adicionar_item', methods=['GET', 'POST'])
@@ -51,7 +51,7 @@ def consultar_pedido():
 def adicionar_item(n):
     n += 1
     return render_template('pedido/cadastrar2.html', form=form, linhas=n,
-                           header='Cadastrar pedido')
+           header='Cadastrar pedido')
 
 
 
@@ -85,11 +85,11 @@ def cadastrar_pedido():
         db.session.add(pedido)
         db.session.commit()
         return render_template('pedido/index.html',
-                               text= f'''Pedido {pedido} cadastrado com sucesso.
-                                         Valor total {pedido.total}''')
+               text= f'Pedido {pedido} cadastrado com sucesso. '
+               + f'Valor total {pedido.total}')
     else:
         return render_template('pedido/cadastrar.html', form=form,
-                               header='Cadastrar pedido')
+               header='Cadastrar pedido')
 
 
 @app.route('/pedido/<op>/consulta', methods=['GET', 'POST'])
@@ -101,47 +101,43 @@ def consultar_id(op):
         pedido = Pedido.query.filter_by(id=form.pedido.data).first()
         if pedido is None:
             return render_template('pedido/index.html',
-                                   text='Nenhum pedido encontrado.')    
+                   text='Nenhum pedido encontrado.')    
         if op == 'atualizar':
             return redirect(url_for('atualizar_pedido', id=pedido.id))
         else:
             return redirect(url_for('cancelar_pedido', id=pedido.id))
     else:
         return render_template('pedido/consultar.html', form=form,
-                               header=f'{op.capitalize()} pedido')
+               header=f'{op.capitalize()} pedido')
 
 
 @app.route('/pedido/atualizar', methods=['GET', 'POST'])
 @login_required
 def atualizar_pedido():
+    #if request.method == 'GET':
     id_pedido = request.args['id']
     pedido = Pedido.query.filter_by(id=id_pedido).first()
-    form = FormCadastroPedido(obj=pedido)
-    form.populate_obj(pedido)
-    # ao enviar form, atualiza dados do pedido
-    if form.validate_on_submit():
-        dados = form.data
-        print('DADOS:', dados)
-        #pedido.data = dados
-        #db.session.commit()
+    if request.method == 'POST':
+        form = FormAtualizacaoPedido()
+        # ao enviar form, atualiza dados do pedido
+        if form.validate_on_submit():
+            form.populate(pedido)
+            #dados = form.data
+            #print('DADOS:', dados)
+            #pedido.data = dados
+            db.session.add(pedido)
+            db.session.commit()
 
-        #with db.session.no_autoflush:
-        #    for linha in form.itens:
-        #        livro = Livro.query.filter_by(isbn=linha.livro.data).first()
-        #        quantidade = linha.quantidade.data
-        #        item = ItemPedido(quantidade=quantidade)
-        #        item.livro = livro
-        #        pedido.itens.append(item)
 
-        #total = sum([item.livro.preco * item.quantidade for item in pedido.itens])
-        #pedido.total = total
-        #db.session.commit()
-        
-        return render_template('pedido/index.html',
-                               text='Pedido atualizado com sucesso.')
-    else:
-        return render_template('pedido/cadastrar.html', form=form,
-                               header='Atualizar pedido')
+            #total = sum([item.livro.preco * item.quantidade for item in pedido.itens])
+            #pedido.total = total
+            #db.session.commit()
+            return render_template('pedido/index.html',
+                   text='Pedido atualizado com sucesso.')
+    # ...
+    form = FormAtualizacaoPedido(obj=pedido)
+    return render_template('pedido/cadastrar.html',
+           form=form, header='Atualizar pedido')
 
 
 @app.route('/pedido/cancelar', methods=['GET', 'POST'])
@@ -156,9 +152,9 @@ def cancelar_pedido():
         pedido.ativo = False
         db.session.commit()
         return render_template('pedido/index.html',
-                               text= f'Pedido {pedido} cancelado com sucesso.')
+               text= f'Pedido {pedido} cancelado com sucesso.')
     else:
         return render_template('pedido/cancelar.html', table=tabela,
-                               form=confirmacao, header='Cancelar pedido')
+               form=confirmacao, header='Cancelar pedido')
 
 
