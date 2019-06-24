@@ -24,10 +24,14 @@ def main():
                       endereco=endereco, telefone='3598765432', email='cliente@dominio.com')
     livro = Livro(titulo='livro', autor='autor', editora='editora', edicao=1,
                   ano='2019', isbn='1', idioma='Pt', preco=9.99, exemplares=10)
+    item = ItemPedido(livro=livro, quantidade=1)
+    pedido = Pedido(cliente=cliente, vendedor=vendedor, desconto=0)
+    pedido.itens.append(item)
     db.session.add(admin)
     db.session.add(vendedor)
     db.session.add(cliente)
     db.session.add(livro)
+    db.session.add(pedido)
     db.session.commit()
     print('BD criado com sucesso.')
 
