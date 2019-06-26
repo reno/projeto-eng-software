@@ -25,6 +25,7 @@ class ConfigDesenvolvimento(Config):
 class ConfigTestes(Config):
     TESTING = True
     SQLALCHEMY_DATABASE_URI = os.environ.get('TEST_DATABASE_URL') or POSTGRE
+    WTF_CSRF_ENABLED = False
 
 class ConfigProducao(Config):
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or POSTGRE
