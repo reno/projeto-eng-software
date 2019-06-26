@@ -1,14 +1,21 @@
 
 {% extends "base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
+{% import "bootstrap/utils.html" as utils %}
+
 
 {% block page_content %}
 <div>
     <h1>{{ header }}</h1>
+    <br>
 </div>
-<br>
-{{ wtf.quick_form(form) }}
-<div>
-	<p>{{ text }}</p>
-</div>
+<form class="form form-horizontal" method="post" role="form" style="padding-left:30px; padding-right:30px">
+	{{ form.hidden_tag() }}
+	{{ wtf.form_field(form.usuario) }}
+	{{ wtf.form_field(form.senha) }}
+	{{ utils.flashed_messages() }}
+	<br>
+	{{ wtf.form_field(form.submit) }}
+</form>
 {% endblock %}
+
