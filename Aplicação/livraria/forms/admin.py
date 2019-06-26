@@ -39,17 +39,10 @@ class FormAtualizacaoVendedor(FlaskForm):
     id = HiddenField(validators=[Data()])
     nome = StringField('Nome', validators=[Data()])
     usuario = StringField('Usuário', validators=[Data(), Regexp('^[a-z0-9_]+$', message=MSG_USUARIO)])
-    #senha_atual = PasswordField('Senha', validators=[Data()])
     nova_senha = PasswordField('Nova senha', description='Opcional', validators=[EqualTo('confirma_senha', message=MSG_SENHA)])
     confirma_senha = PasswordField('Confirme a senha')
-    #admin = HiddenField()
     submit = SubmitField('Atualizar')
-    '''
-    def validate_senha_atual(self, field):
-        f = Funcionario.query.filter_by(id=self.id).first()
-        if not f.verifica_senha(field.data):
-            raise ValidationError('Senha incorreta.')
-    '''
+
 
 class FormConsultaId(FlaskForm):
     id = StringField('Nº registro', validators=[Data()])
