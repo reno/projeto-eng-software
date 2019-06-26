@@ -80,21 +80,20 @@ def atualizar_dados():
 def atualizar_vendedor():
     registro = request.args['id']
     funcionario = Funcionario.query.filter_by(id=registro).first()
-    form_atualizacao = FormAtualizacaoVendedor(obj=funcionario)
-    form_atualizacao.populate_obj(funcionario)
-    if form_atualizacao.validate_on_submit():
-        dados = {k: v for k, v in form_atualizacao.data.items()
-                 if k not in {'submit','csrf_token', 'nova_senha', 'confirma_senha'}}
-        if form_atualizacao.nova_senha.data is not None:
-            print('SOBRESCREVENDO SENHA')
-            dados['senha'] = form_atualizacao.nova_senha.data
-        print('DADOS:', dados)
-        funcionario.data = dados 
+    form = FormAtualizacaoVendedor(obj=funcionario)
+    form.populate_obj(funcionario)
+    if form.validate_on_submit():
+        dados = {k: v for k, v in form.data.items()
+                 if k not in {'submit','csrf_token', 'confirma_senha'}}
+        funcionario.data = dados
+        if form.nova_senha.data is not None:
+            funcionario.senha = form.nova_senha.data
+        db.session.add(funcionario)
         db.session.commit()
         return render_template('admin/index.html', text='Vendedor atualizado com sucesso.')  
     # formulário ainda não enviado, renderiza página
     else:
-        return render_template('admin/cadastrar.html', form=form_atualizacao)
+        return render_template('admin/cadastrar.html', form=form)
 
 
 @app.route('/admin/excluir_vendedor', methods=['GET', 'POST'])
