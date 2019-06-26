@@ -15,7 +15,8 @@ from livraria.forms.principal import *
 @app.route('/')
 @login_required
 def index():
-    return render_template('index.html', header='Bem vindo!')
+    # flash(f'Bem vindo, {current_user}!', category='info')
+    return render_template('index.html')
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -28,7 +29,7 @@ def login():
             login_user(usuario, True)
             return redirect(url_for('index'))
         else:
-            flash('Usuário ou senha incorretos.')
+            flash('Usuário ou senha incorretos.', category='danger')
     return render_template('login.html', form=form, header='Entrar')
 
 
@@ -36,9 +37,18 @@ def login():
 @login_required
 def logout():
     logout_user()
-    flash('Você foi desconectado')
+    flash('Você foi desconectado', category='message')
     return redirect(url_for('login'))
 
+@app.route('/shutdown')
+def server_shutdown():
+    if not current_app.testing:
+        abort(404)
+    shutdown = request.environ.get('werkzeug.server.shutdown')
+    if not shutdown:
+        abort(500)
+        shutdown()
+    return 'Encerrando server...”
 
 @app.errorhandler(404)
 def page_not_found(e):
