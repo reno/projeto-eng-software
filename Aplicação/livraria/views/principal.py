@@ -48,7 +48,7 @@ def server_shutdown():
     if not shutdown:
         abort(500)
         shutdown()
-    return 'Encerrando server...”
+    return 'Encerrando server...'
 
 @app.errorhandler(404)
 def page_not_found(e):
