@@ -34,8 +34,8 @@ class Livro(db.Model):
 class Funcionario(UserMixin, db.Model):
     __tablename__ = "funcionarios"
     id = db.Column(db.Integer, primary_key=True)
-    nome = db.Column(db.String)
-    usuario = db.Column(db.String, unique=True)
+    nome = db.Column(db.String, nullable=False)
+    usuario = db.Column(db.String, unique=True, nullable=False)
     senha_hash = db.Column(db.String(128))
     admin = db.Column(db.Boolean)
     __mapper_args__ = {'polymorphic_on': 'admin'}
