@@ -76,7 +76,7 @@ Uma breve descrição de arquivos e pastas:
   
 * **Chrome Webdriver**
   
-  Driver necessário para a execução dos testes funcionais. Disponível [aqui](http://chromedriver.chromium.org/downloads).
+  Driver necessário para a execução dos testes funcionais, disponível [aqui](http://chromedriver.chromium.org/downloads). O executável deve ser inserido na pasta  `venv/bin/`.
 
 ## Uso
 
