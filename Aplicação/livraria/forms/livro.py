@@ -1,18 +1,19 @@
-'''
-livraria/forms.py
+"""
+livraria/forms/livro.py
 
-Define formularios usados na aplicação.
-'''
+Define formularios usados no menu Livros.
+"""
 
 from flask_wtf import FlaskForm
-from wtforms import IntegerField, DecimalField, StringField, SubmitField, SelectField
-from wtforms.validators import DataRequired as Data, Email, ValidationError
+from wtforms import IntegerField, DecimalField, StringField, SubmitField, \
+                    SelectField
+from wtforms.validators import DataRequired as Data, ValidationError
 from isbnlib import is_isbn10, is_isbn13
 from livraria.models import *
 
 
 def isbn():
-    '''Validator para o campo ISBN'''
+    """Validator para o campo ISBN"""
     message = 'Informe um ISBN válido'
     def _isbn(form, field):
         if not is_isbn10(field.data) and not is_isbn13(field.data):
@@ -34,7 +35,7 @@ class FormCadastroLivro(FlaskForm):
     editora = StringField('Editora', validators=[Data()])
     edicao = StringField('Edição', validators=[Data()])
     ano = IntegerField('Ano', validators=[Data()])
-    isbn = StringField('ISBN', validators=[Data()], id='isbn_field')#, isbn()], )
+    isbn = StringField('ISBN', validators=[Data()], id='isbn_field')
     idioma = StringField('Idioma', validators=[Data()])
     preco = DecimalField('Preço', validators=[Data()])
     exemplares = IntegerField('Número de exemplares', validators=[Data()])
@@ -43,7 +44,7 @@ class FormCadastroLivro(FlaskForm):
 
 class FormConsultaIsbn(FlaskForm):
     isbn = StringField('ISBN', validators=[Data()])#, isbn()])
-    submit = SubmitField('Consultar')
+    submit = SubmitField('Localizar')
 
 
 class FormExclusaoLivro(FlaskForm):

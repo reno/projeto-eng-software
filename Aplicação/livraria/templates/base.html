@@ -1,96 +1,99 @@
-<!DOCTYPE html>
-
 {% extends "bootstrap/base.html" %}
 
 {% block title %}Livraria do Amorim{% endblock %}
 
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 {% block navbar %}
-<nav class="navbar sticky-top navbar-light" style="background-color: #ffcc00;">
+<nav class="navbar navbar-light sticky-top navbar-lg" style="background-color: #ffcc00;">
     <div class="container">
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle"
-            data-toggle="collapse" data-target=".navbar-collapse">
-                <span style="background-color: black" class="icon-bar"></span>
-                <span style="background-color: black" class="icon-bar"></span>
-                <span style="background-color: black" class="icon-bar"></span>
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+              <span style="background-color: black; margin: 0; height:3px" class="icon-bar"></span>
+              <span style="background-color: black; margin: 1; height:3px" class="icon-bar"></span>
+              <span style="background-color: black; margin: 2; height:2.5px" class="icon-bar"></span>  
             </button>
-            <a class="navbar-brand" href="/">Livraria do Amorim</a>
+            <a class="navbar-brand" style="margin-right: 20px; color: black; font-family:Georgia,serif; font-size:22px; margin-top: 0.4em;" href="/">Livraria do Amorim</a>
         </div>
-
+    {% if current_user.is_authenticated %}
 		<div class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
+            <ul class="nav navbar-nav" style="font-color:black; font-size:17px; margin-top: 0.5em">
                 <!-- Item do menu -->
       			<li class="nav-item dropdown">
-        			<a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
-          				Livros
+        			<a id="menuLivros" class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+          				<font color="black"> Livros </font>
         			</a>
-        			<ul class="dropdown-menu">
-          			<li><a href="{{ url_for('consultar_livro') }}" >Consultar livro<br></a>
-         			 	<li><a href="{{ url_for('cadastrar_livro') }}">Cadastrar livro<br></a>
-         			 	<li><a href="{{ url_for('consulta_isbn', op='atualizar') }}">Atualizar livro<br></a>
-         			 	<li><a href="{{ url_for('consulta_isbn', op='excluir') }}">Excluir livro<br></a>
+        			<ul class="dropdown-menu" style="font-size:15px">
+          			<li><a id="consultarLivro" href="{{ url_for('consultar_livro') }}">Consultar livro<br></a>
+         			 	<li><a id="cadastrarLivro" href="{{ url_for('cadastrar_livro') }}">Cadastrar livro<br></a>
+         			 	<li><a id="atualizarLivro" href="{{ url_for('consultar_isbn', op='atualizar') }}">Atualizar livro<br></a>
+         			 	<li><a id="excluirLivro" href="{{ url_for('consultar_isbn', op='excluir') }}">Excluir livro<br></a>
 			        </ul>
       			</li>
       			<!-- Item do menu -->
       			<li class="nav-item dropdown">
-        			<a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
-          				Pedidos
+        			<a id="menuPedidos" class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+          				<font color="black"> Pedidos </font>
         			</a>
-        			<ul class="dropdown-menu">
-          				<li><a href="#">Novo pedido<br></a>
-         			 	<li><a href="#">Consultar pedidos<br></a>
-         			 	<li><a href="#">Atualizar pedido<br></a>
-         			 	<li><a href="#">Cancelar pedido<br></a>
+        			<ul class="dropdown-menu" style="font-size:15px">
+                <li><a id="consultarPedido" href="{{ url_for('consultar_pedido') }}">Consultar pedidos<br></a>
+          			<li><a id="cadastrarPedido" href="{{ url_for('cadastrar_pedido') }}">Cadastrar pedido<br></a>
+         			 	<li><a id="atualizarPedido" href="{{ url_for('consultar_id', op='atualizar') }}">Atualizar pedido<br></a>
+         			 	<li><a id="excluirPedido" href="{{ url_for('consultar_id', op='cancelar') }}">Cancelar pedido<br></a>
 			        </ul>
       			</li>
       			<!-- Item do menu -->
       			<li class="nav-item dropdown">
-        			<a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
-          				Clientes
+        			<a id="menuClientes" class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+          				<font color="black"> Clientes </font>
         			</a>
-        			<ul class="dropdown-menu">
-          				<li><a href="#">Consultar cliente<br></a>
-         			 	<li><a href="#">Novo cliente<br></a>
-         			 	<li><a href="#">Atualizar cliente<br></a>
+        			<ul class="dropdown-menu" style="font-size:15px">
+          			<li><a id="consultarCliente" href="{{ url_for('consultar_cliente') }}">Consultar cliente<br></a>
+         			 	<li><a id="cadastrarCliente" href="{{ url_for('cadastrar_cliente') }}">Cadastrar cliente<br></a>
+         			 	<li><a id="atualizarCliente" href="{{ url_for('consultar_documento', op='atualizar') }}">Atualizar cliente<br></a>
 			        </ul>
       			</li>
+            {% if current_user.admin %}
       			<!-- Item do menu -->
       			<li class="nav-item dropdown">
-        			<a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
-          				Admin
+        			<a id="menuAdmin" class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+          				<font color="black"> Admin </font>
         			</a>
-        			<ul class="dropdown-menu">
-          				<li><a href="#">Consultar vendedor<br></a>
-         			 	<li><a href="#">Cadastrar vendedor<br></a>
-         			 	<li><a href="#">Atualizar vendedor<br></a>
-         			 	<li><a href="#">Excluir vendedor<br></a>
-         			 	<li><a href="#">Excluir cliente<br></a>
+        			<ul class="dropdown-menu" style="font-size:15px">
+          			<li><a id="consultarVendedor" href="{{ url_for('consultar_vendedor') }}">Consultar vendedor<br></a>
+         			 	<li><a id="cadastrarVendedor" href="{{ url_for('cadastrar_vendedor') }}">Cadastrar vendedor<br></a>
+         			 	<li><a id="atualizarVendedor" href="{{ url_for('consultar_registro', op='atualizar') }}">Atualizar vendedor<br></a>
+         			 	<li><a id="excluirVendedor" href="{{ url_for('consultar_registro', op='excluir') }}">Excluir vendedor<br></a>
+         			 	<li><a id="excluirCliente" href="{{ url_for('consultar_documento', op='excluir') }}">Excluir cliente<br></a>
 			        </ul>
       			</li>
+            {% endif %}
       		</ul>
-      		<ul class="nav navbar-nav navbar-right">
+      		<ul class="nav navbar-nav navbar-right" style="font-size:17px; margin-top: 0.5em">
       			<li class="nav-item dropdown">
-        			<a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
-          				Usuário
+        			<a id="menuUsuario" class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+                  <font color="black"> {{ current_user.nome }} </font>
         			</a>
         			<ul class="dropdown-menu">
-          				<li><a href="#">Sair<br></a>
-			        </ul>
+                  {% if current_user.admin %} 
+                  <li><a id="atualizarUsuario" href="{{ url_for('atualizar_dados') }}">Atualizar dados<br></a>
+                  {% endif %}
+          				<li><a id="logout" href="{{ url_for('logout') }}">Sair<br></a>
+              </ul>			        
       			</li>
-
-            </ul>
+          </ul>
         </div>   
     </div>
+    {% endif %}
 </nav>
 {% endblock %}
 
 {% block content %}
+<br>
 <div class="container">
     {% block page_content %}{% endblock %}
 </div>
 {% endblock %}
-
-
 
 
 

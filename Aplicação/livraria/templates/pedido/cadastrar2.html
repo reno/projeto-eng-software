@@ -1,0 +1,47 @@
+
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "bootstrap/utils.html" as utils %}
+
+
+{% block page_content %}
+<div>
+    <h1>{{ header }}</h1>
+</div>
+<br>
+
+<form class="form form-horizontal" method="post" role="form" style="padding-left:20px; padding-right:20px">
+
+{{ wtf.form_field(form.cliente) }}
+
+<div class="row">
+
+{% set linhas = 1 %}
+
+{% for item in form.itens %}
+	{% if not loop.index > linhas %}
+		<div class="col-xs-9" style="padding-right: 40px">
+		{{ wtf.form_field(item.livro) }}
+		</div>
+		<div class="col-xs-3">
+		{{ wtf.form_field(item.quantidade) }}
+		</div>
+	{% endif %}
+{% endfor %}
+</div>
+
+{% set atr = {'id':'botao'} %}
+
+{{ utils.form_button('#', "Adicionar item", class="btn-outline", "script") }}
+
+{{ wtf.form_field(form.desconto) }}
+{{ wtf.form_field(form.total) }}
+{{ wtf.form_field(form.submit) }}
+
+
+</form>
+
+<div>
+	<p>{{ text }}</p>
+</div>
+{% endblock %}
