@@ -12,6 +12,7 @@ Sistema de controle de vendas para livraria, incluindo base de dados de livros, 
 
 *  **v0.1**: Documentação de requisitos e protótipo da interface.
 *  **v1**: Documentação de projeto incluindo diagramas de classes e de sequência, além da implementação da interface e operações sobre a tabela Livros. 
+*  **v2**: Implementação das operações sobre as demais tabelas, atualização da documentação e implementação de testes. 
 
 
 
@@ -29,9 +30,11 @@ O projeto é organizado conforme abaixo:
 │   ├── views.py
 │   └── templates/
 ├── tests/
-├── create_db.py
+├── app.py  
 ├── config.py
-└── app.py 
+├── create_db.py
+├── teste_funcional.py
+└── requirements.txt
 ```
 
 Uma breve descrição de arquivos e pastas:
@@ -43,10 +46,11 @@ Uma breve descrição de arquivos e pastas:
 * `tables.py` guarda definições de tabelas usadas na renderização do resultado de consultas.
 * `views.py` controla as rotas da aplicação.
 * `templates/` contém todos os arquivos HTML utilizados.
-* `tests/` contém o código de testes.
-* `create_db.py` script de inicialização do banco de dados no ambiente de desenvolvimento.
-* `config.py` guarda configurações de diferentes ambientes, como desenvolvimento e testes.
+* `tests/`  código de testes unitários.
 * `app.py` código que instancia a aplicação.
+* `config.py` guarda configurações de diferentes ambientes, como desenvolvimento e testes.
+* `create_db.py` script de inicialização do banco de dados no ambiente de desenvolvimento.
+* `teste_funcional.py `código dos testes funcionais.
 
 
 
@@ -69,9 +73,13 @@ Uma breve descrição de arquivos e pastas:
   A aplicação é pré-configurada para o PostgreSQL no ambiente de desenvolvimento, e inclui as configurações para uso do SQLite. Instruções de instalação do PostgreSQL ser encontradas [aqui](https://www.postgresql.org/download/).
   
   Para instalar o SQLite, no Linux, basta utilizar os comandos `apt-get install sqlite3` e   `apt-get install libsqlite3-dev`.
+  
+* **Chrome Webdriver**
+  
+  Driver necessário para a execução dos testes funcionais. Disponível [aqui](http://chromedriver.chromium.org/downloads).
 
 ## Uso
-  
+
 **1. Configuração do ambiente virtual**
 
 Faça o clone do repositório:
@@ -94,8 +102,7 @@ Instale as dependências no ambiente virtual:
 
 `pip install -r requirements.txt`
 
-  
-**2. Inicialização do banco de dados (opcional)**
+**2. Inicialização do banco de dados**
 
 Caso deseje inicializar o banco de dados, execute:
 
@@ -103,7 +110,6 @@ Caso deseje inicializar o banco de dados, execute:
 
 As configurações do banco de dados estão localizadas no arquivo `config.py`.
 
-  
 **3. Execução da aplicação**
 
 Finalmente, execute:
@@ -114,8 +120,22 @@ A aplicação poderá ser acessada por um navegador no endereço `http://localho
 
 
 
+## Testes
+
+* **Testes unitários**
+
+  Os testes unitários estão localizados na pasta `tests`.  Para executar os testes, na pasta da aplicação, execute o comando `flask test`.
+
+* **Testes funcionais**
+
+  Para executar os testes funcionais, na pasta da aplicação, execute o comando `python teste_funcional.py`
+
+
+
 ## Colaboração
 
 Ao realizar um commit, indique na mensagem o fechamento da issue relacionada (caso possua) usando `Closes #1`, com o número da Issue. Isso fechará o Issue automaticamente.
 
 Em seguida, localize no backlog a issue fechada  e inclua um comentário com o hash do commit.
+
+
