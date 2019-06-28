@@ -16,7 +16,6 @@ db.init_app(app)  # inicializado em models.py
 def main():
     db.drop_all()
     db.create_all()
-    '''
     admin = Funcionario(nome='Administrador', usuario='admin', senha='admin', admin=True)
     vendedor = Vendedor(nome='Vendedor', usuario='vendedor', senha='1234')
     endereco = Endereco(logradouro='rua', numero='sn', bairro='bairro',
@@ -34,7 +33,6 @@ def main():
     db.session.add(livro)
     db.session.add(pedido)
     db.session.commit()
-    '''
     print('BD criado com sucesso.')
 
 

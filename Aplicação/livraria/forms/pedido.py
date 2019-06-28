@@ -26,9 +26,7 @@ class FormItensPedido(FlaskForm):
 class FormCadastroPedido(FlaskForm):
     cliente = StringField('Cliente', validators=[Data()])
     itens = FieldList(FormField(FormItensPedido), min_entries=1, max_entries=9)
-    #vendedor = HiddenField()
     desconto = StringField('Desconto', validators=[Data()])
-    #total = HiddenField()
     submit = SubmitField('Cadastrar')
 
     def validate_cliente(self, field):
