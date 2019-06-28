@@ -50,21 +50,6 @@ def cadastrar_livro():
         return render_template('livro/cadastrar.html', form=form, header='Cadastrar livro')
 
 
-@app.route('/livro/cadastrar/meta', methods=['POST'])
-def prencher_metadados():
-    isbn = request.form['isbn']
-    #with meta(isbn) as data:
-    try:
-        data = meta(isbn)
-        session['metadados'] = {'titulo': data['Title'],
-        'autor': data['Authors'][0], 'editora': data['Publisher'],
-        'edicao': 0, 'ano': data['Year'], 'isbn': data['ISBN-13'],
-        'idioma': data['Language'], 'preco': 0, 'exemplares': 0}
-    except:
-        pass
-    return redirect(url_for('cadastrar_livro'), code=307)
-
-
 @app.route('/livro/<op>/consulta', methods=['GET', 'POST'])
 @login_required
 def consultar_isbn(op):
