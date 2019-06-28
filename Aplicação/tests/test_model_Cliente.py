@@ -1,22 +1,19 @@
-import unittest
+"""
+tests/test_model_Cliente.py
+
+Testes unitários das operações sobre a tabela Clientes
+"""
+
 from test_model import TesteModels
 from livraria.models import db, Cliente, Endereco
+import tests.dados as dados
 
-dados_endereco = {
-    'logradouro':'rua', 'numero':'sn', 'bairro':'bairro',
-    'cidade':'Lavras', 'estado':'MG', 'cep': '37200000'
-}
-
-dados_cliente = {
-    'nome':'Cliente', 'documento':'12345678', 'data_nascimento':'01/01/1990',
-    'telefone':'3598765432', 'email':'cliente@dominio.com'
-}
 
 class TesteCliente(TesteModels):
 
     def teste_consulta(self):
-        cliente = Cliente(**dados_cliente)
-        endereco = Endereco(**dados_endereco)
+        cliente = Cliente(**dados.cliente)
+        endereco = Endereco(**dados.endereco)
         cliente.endereco = endereco
         db.session.add(cliente)
         db.session.commit()
@@ -24,16 +21,16 @@ class TesteCliente(TesteModels):
         self.assertIsInstance(consulta, Cliente)
 
     def teste_cadastro(self):
-        cliente = Cliente(**dados_cliente)
-        endereco = Endereco(**dados_endereco)
+        cliente = Cliente(**dados.cliente)
+        endereco = Endereco(**dados.endereco)
         cliente.endereco = endereco
         db.session.add(cliente)
         db.session.commit()
         self.assertTrue(cliente in db.session) 
 
     def teste_atualizacao(self):
-        cliente = Cliente(**dados_cliente)
-        endereco = Endereco(**dados_endereco)
+        cliente = Cliente(**dados.cliente)
+        endereco = Endereco(**dados.endereco)
         cliente.endereco = endereco
         db.session.add(cliente)
         cliente.quantidade = 2
@@ -42,8 +39,8 @@ class TesteCliente(TesteModels):
         self.assertEqual(cliente.quantidade, confirmacao.quantidade)
 
     def teste_exclusao(self):
-        cliente = Cliente(**dados_cliente)
-        endereco = Endereco(**dados_endereco)
+        cliente = Cliente(**dados.cliente)
+        endereco = Endereco(**dados.endereco)
         cliente.endereco = endereco
         db.session.add(cliente)
         db.session.commit()
