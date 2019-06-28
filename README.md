@@ -53,6 +53,12 @@ Uma breve descrição de arquivos e pastas:
 * `teste_funcional.py `código dos testes funcionais.
 
 
+## Colaboração
+
+Ao realizar um commit, indique na mensagem o fechamento da issue relacionada (caso possua) usando `Closes #1`, com o número da Issue. Isso fechará o Issue automaticamente.
+
+Em seguida, localize no backlog a issue fechada  e inclua um comentário com o hash do commit.
+
 
 ## Requisitos
 
@@ -129,13 +135,5 @@ A aplicação poderá ser acessada por um navegador no endereço `http://localho
 * **Testes funcionais**
 
   Para executar os testes funcionais, na pasta da aplicação, execute o comando `python teste_funcional.py`
-
-
-
-## Colaboração
-
-Ao realizar um commit, indique na mensagem o fechamento da issue relacionada (caso possua) usando `Closes #1`, com o número da Issue. Isso fechará o Issue automaticamente.
-
-Em seguida, localize no backlog a issue fechada  e inclua um comentário com o hash do commit.
 
 
