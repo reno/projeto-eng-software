@@ -122,19 +122,11 @@ def atualizar_pedido():
         # ao enviar form, atualiza dados do pedido
         if form.validate_on_submit():
             form.populate(pedido)
-            #dados = form.data
-            #print('DADOS:', dados)
-            #pedido.data = dados
             db.session.add(pedido)
             db.session.commit()
-
-
-            #total = sum([item.livro.preco * item.quantidade for item in pedido.itens])
-            #pedido.total = total
-            #db.session.commit()
             return render_template('pedido/index.html',
                    text='Pedido atualizado com sucesso.')
-    # ...
+
     form = FormAtualizacaoPedido(obj=pedido)
     return render_template('pedido/cadastrar.html',
            form=form, header='Atualizar pedido')
