@@ -76,9 +76,9 @@
         			</a>
         			<ul class="dropdown-menu">
                   {% if current_user.admin %} 
-                  <li><a href="{{ url_for('atualizar_dados') }}">Atualizar dados<br></a>
+                  <li><a id="atualizarUsuario" href="{{ url_for('atualizar_dados') }}">Atualizar dados<br></a>
                   {% endif %}
-          				<li><a href="{{ url_for('logout') }}">Sair<br></a>
+          				<li><a id="logout" href="{{ url_for('logout') }}">Sair<br></a>
               </ul>			        
       			</li>
           </ul>

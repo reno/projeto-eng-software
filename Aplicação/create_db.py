@@ -1,29 +1,31 @@
-'''
+"""
 create_db.py
 
-Script para criação do banco de dados. Recebe argumento ('dev', 'testes' ou 'producao').
-'''
+Script para inicialização do banco de dados.
+Também insere dados no BD para facilitar testes manuais no sistema.
+"""
 
-from sys import argv
+#from sys import argv
 from flask import Flask
 from config import config
 from livraria.models import *
+import tests.dados as dados
 
 app = Flask(__name__)
-app.config.from_object(config[argv[1] or 'dev'])
+app.config.from_object(config['dev'])
 db.init_app(app)  # inicializado em models.py 
+
 
 def main():
     db.drop_all()
     db.create_all()
-    admin = Funcionario(nome='Administrador', usuario='admin', senha='admin', admin=True)
-    vendedor = Vendedor(nome='Vendedor', usuario='vendedor', senha='1234')
-    endereco = Endereco(logradouro='rua', numero='sn', bairro='bairro',
-                        cidade='Lavras', estado='MG', cep= '37200000')
-    cliente = Cliente(nome='Cliente', documento='12345678', data_nascimento='01/01/1990',
-                      endereco=endereco, telefone='3598765432', email='cliente@dominio.com')
-    livro = Livro(titulo='livro', autor='autor', editora='editora', edicao=1,
-                  ano='2019', isbn='1', idioma='Pt', preco=9.99, exemplares=10)
+    # Instancia e insere objetos no BD
+    admin = Funcionario(**dados.admin)
+    vendedor = Vendedor(**dados.vendedor)
+    endereco = Endereco(**dados.endereco)
+    cliente = Cliente(**dados.cliente)
+    cliente.endereco = endereco
+    livro = Livro(**dados.livro)
     item = ItemPedido(livro=livro, quantidade=1)
     pedido = Pedido(cliente=cliente, vendedor=vendedor, desconto=0)
     pedido.itens.append(item)
@@ -33,6 +35,7 @@ def main():
     db.session.add(livro)
     db.session.add(pedido)
     db.session.commit()
+    # Fim das inserções
     print('BD criado com sucesso.')
 
 

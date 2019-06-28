@@ -1,4 +1,4 @@
-'''
+"""
 decorators.py
 
 Implementa o padrão de projeto Decorator, descrito no livro
@@ -17,8 +17,7 @@ no controle das rotas do menu admin (livraria/views/admin.py)
 
 O framework Flask também faz uso extensivo de decorators, como pode ser
 verificado nos demais arquivos da pasta livraria/views.
-
-'''
+"""
 
 from functools import wraps
 from flask import abort
@@ -36,4 +35,5 @@ def admin():
     return decorator
 
 def admin_required(f):
+    """Restringe o acesso de uma função a usuários administradores."""
     return admin()(f)

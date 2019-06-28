@@ -1,9 +1,9 @@
-'''
+"""
 livraria/models.py
 
 Define tabelas do banco de dados.
 Para criação do BD, execute o script 'create_db.py'
-'''
+"""
 
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.ext.hybrid import hybrid_property
@@ -14,6 +14,7 @@ from . import login_manager
 db = SQLAlchemy()
 
 class Livro(db.Model):
+    """Define a tabela Livros no banco de dados"""
     __tablename__ = "livros"
     id = db.Column(db.Integer, primary_key=True)
     titulo = db.Column(db.String, nullable=False)
@@ -25,13 +26,15 @@ class Livro(db.Model):
     idioma = db.Column(db.String, nullable=False)
     preco = db.Column(db.Float, nullable=False)
     exemplares = db.Column(db.Integer, nullable=False)
-    pedidos = db.relationship('ItemPedido', backref='livros')
+    pedidos = db.relationship('ItemPedido', backref='livros',
+                              cascade='all, delete-orphan')
 
     def __repr__(self):
         return self.isbn
 
 
 class Funcionario(UserMixin, db.Model):
+    """Define a tabela Funcionarios no banco de dados"""
     __tablename__ = "funcionarios"
     id = db.Column(db.Integer, primary_key=True)
     nome = db.Column(db.String, nullable=False)
@@ -62,9 +65,11 @@ VENDEDOR = False
 ADMIN = True
 
 class Vendedor(Funcionario):
+    """Estende a tabela Funcionarios"""
     __mapper_args__ = {'polymorphic_identity': VENDEDOR}
 
 class Admin(Funcionario):
+    """Estende a tabela Funcionarios"""
     __mapper_args__ = {'polymorphic_identity': ADMIN}
 
 
@@ -74,13 +79,15 @@ def load_user(user_id):
 
 
 class Cliente(db.Model):
+    """Define a tabela Clientes no banco de dados"""
     __tablename__ = "clientes"
     id = db.Column(db.Integer, primary_key=True)
     nome = db.Column(db.String, nullable=False)
     documento = db.Column(db.String, nullable=False)
     data_nascimento = db.Column(db.Date, nullable=False)
     endereco = db.relationship('Endereco', cascade="all,delete",
-                               backref='cliente', lazy=True, uselist=False)
+                                backref='cliente', lazy=True,
+                                uselist=False)
     telefone = db.Column(db.String, nullable=False)
     email = db.Column(db.String, nullable=False)
 
@@ -89,6 +96,7 @@ class Cliente(db.Model):
 
 
 class Endereco(db.Model):
+    """Representa o endereço de um cliente."""
     __tablename__ = "enderecos"
     id = db.Column(db.Integer, primary_key=True)
     logradouro = db.Column(db.String, nullable=False)
@@ -119,6 +127,7 @@ pedidos_vendedor = db.Table('pedidos_vendedor',
 
 
 class Pedido(db.Model):
+    """Define a tabela Pedidos no banco de dados"""
     __tablename__ = "pedidos"
     id = db.Column(db.Integer, primary_key=True)
     itens = db.relationship('ItemPedido', backref='pedidos', lazy=True,
@@ -127,7 +136,7 @@ class Pedido(db.Model):
                               backref='pedidos', lazy=True, uselist=False)
     vendedor = db.relationship('Funcionario', secondary=pedidos_vendedor,
                                backref='pedidos', lazy=True, uselist=False)
-    desconto = db.Column(db.Float, default=0, nullable=False)
+    desconto = db.Column(db.Integer, default=0, nullable=False)
     total = db.Column(db.Float)
     ativo = db.Column(db.Boolean, default=True)
 
@@ -136,6 +145,7 @@ class Pedido(db.Model):
 
 
 class ItemPedido(db.Model):
+    """Representa um item de um pedido. """
     __tablename__ = "itens_pedido"
     id_pedido = db.Column(db.Integer, db.ForeignKey('pedidos.id'),
                           primary_key=True)

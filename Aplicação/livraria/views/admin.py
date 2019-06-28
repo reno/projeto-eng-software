@@ -1,8 +1,8 @@
-'''
+"""
 livraria/views/admin.py
 
 Define rotas do menu Admin.
-'''
+"""
 
 from flask import Flask, render_template, redirect, url_for, request, flash
 from flask_login import login_required, current_user
@@ -25,7 +25,8 @@ def consultar_vendedor():
         tabela = TabelaFuncionarios(resultado)
         return render_template('admin/resultado.html', table=tabela)
     # formulário ainda não enviado, renderiza página
-    return render_template('admin/consultar.html', form=form, header='Consultar vendedor')
+    return render_template('admin/consultar.html', form=form,
+                            header='Consultar vendedor')
 
 
 @app.route('/admin/cadastrar_vendedor', methods=['GET', 'POST'])
@@ -36,17 +37,20 @@ def cadastrar_vendedor():
     if form.validate_on_submit():
         vendedor = Funcionario.query.filter_by(usuario=form.usuario.data).first()
         if vendedor is not None:
-            return render_template('index.html', text='Vendedor {} já cadastrado.'.format(vendedor))
+            return render_template('index.html',
+                text='Vendedor {} já cadastrado.'.format(vendedor))
         else:
             dados = {k: v for k, v in form.data.items()
                      if k not in {'submit','csrf_token','confirma_senha'}}
             vendedor = Funcionario(**dados)
             db.session.add(vendedor)
             db.session.commit()
-            return render_template('admin/index.html', text='Vendedor {} cadastrado com sucesso.'.format(vendedor))
+            return render_template('admin/index.html',
+                text='Vendedor {} cadastrado com sucesso.'.format(vendedor))
     # formulário ainda não enviado, renderiza página
     else:
-        return render_template('admin/cadastrar.html', form=form, header='Cadastrar vendedor')
+        return render_template('admin/cadastrar.html', form=form,
+            header='Cadastrar vendedor')
 
 @app.route('/admin/<op>/consulta', methods=['GET', 'POST'])
 @login_required
@@ -57,14 +61,16 @@ def consultar_registro(op):
     if form_registro.validate_on_submit():
         funcionario = Funcionario.query.filter_by(id=form_registro.id.data).first()
         if funcionario is None:
-            return render_template('admin/index.html', text='Nenhum funcionário encontrado.')    
+            return render_template('admin/index.html',
+                text='Nenhum vendedor encontrado.')    
         if op == 'atualizar':
             return redirect(url_for('atualizar_vendedor', id=funcionario.id))
         else:
             return redirect(url_for('excluir_vendedor', id=funcionario.id))
     # formulário ainda não enviado, renderiza página
     else: 
-        return render_template('admin/cadastrar.html', form=form_registro, header='{} vendedor'.format(op.capitalize()))
+        return render_template('admin/cadastrar.html', form=form_registro, 
+            header='{} vendedor'.format(op.capitalize()))
 
 
 @app.route('/admin/atualizar_dados')
@@ -90,7 +96,8 @@ def atualizar_vendedor():
             funcionario.senha = form.nova_senha.data
         db.session.add(funcionario)
         db.session.commit()
-        return render_template('admin/index.html', text='Vendedor atualizado com sucesso.')  
+        return render_template('admin/index.html',
+            text='Vendedor atualizado com sucesso.')  
     # formulário ainda não enviado, renderiza página
     else:
         return render_template('admin/cadastrar.html', form=form)
@@ -108,9 +115,11 @@ def excluir_vendedor():
     if confirmacao.validate_on_submit():
         db.session.delete(funcionario)
         db.session.commit()
-        return render_template('admin/index.html', text='Vendedor excluido com sucesso.')
+        return render_template('admin/index.html',
+            text='Vendedor excluido com sucesso.')
     else:
-        return render_template('admin/excluir.html', table=tabela, form=confirmacao, header='Excluir vendedor')
+        return render_template('admin/excluir.html', table=tabela,
+            form=confirmacao, header='Excluir vendedor')
 
 
 @app.route('/admin/excluir_cliente', methods=['GET', 'POST'])
@@ -125,6 +134,9 @@ def excluir_cliente():
     if confirmacao.validate_on_submit():
         db.session.delete(cliente)
         db.session.commit()
-        return render_template('admin/index.html', text='Cliente excluido com sucesso.')
+        return render_template('admin/index.html',
+            text='Cliente excluido com sucesso.')
     else:
-        return render_template('admin/excluir.html', table=tabela, form=confirmacao, header='Excluir cliente')
+        return render_template('admin/excluir.html', table=tabela,
+            form=confirmacao, header='Excluir cliente')
+    

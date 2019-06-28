@@ -1,8 +1,8 @@
-'''
+"""
 livraria/forms/cliente.py
 
 Define formularios usados no menu Clientes.
-'''
+"""
 
 from flask_wtf import FlaskForm
 from wtforms import StringField, DateField, SelectField, FormField, SubmitField
@@ -17,7 +17,6 @@ MSG_CEP = 'Informe apenas números'
 class FormConsultaCliente(FlaskForm):
     opcoes = [(atr, atr.capitalize()) for atr in dir(Cliente)
               if not atr.startswith(('_', 'id', 'm', 'q', 'data'))]
-    #opcoes.insert(0, ('data_nascimento', 'Data de nascimento'))
     campo = SelectField('Campo de busca', choices=opcoes)  
     termo = StringField('Palavra-chave', validators=[Data()])
     submit = SubmitField('Consultar')
@@ -30,19 +29,24 @@ class FormEndereco(FlaskForm):
     bairro = StringField('Bairro', validators=[Data()])
     cidade = StringField('Cidade', validators=[Data()])
     estado = StringField('Estado', validators=[Data()])
-    cep = StringField('CEP', validators=[Data(), Regexp('^[0-9]{8}$', message=MSG_CEP)])
+    cep = StringField('CEP', validators=[Data(), Regexp('^[0-9]{8}$',
+                                         message=MSG_CEP)])
 
 
 class FormCadastroCliente(FlaskForm):
     nome = StringField('Nome', validators=[Data()])
-    documento = StringField('Documento', validators=[Data(), Regexp('^[0-9]{5,13}$', message=MSG_DOC)])
-    data_nascimento = DateField('Data de nascimento', validators=[Data()], format='%d/%m/%Y')
+    documento = StringField('Documento', validators=[Data(),
+                            Regexp('^[0-9]{5,13}$', message=MSG_DOC)])
+    data_nascimento = DateField('Data de nascimento',
+                                validators=[Data()], format='%d/%m/%Y')
     endereco = FormField(FormEndereco)
-    telefone = StringField('Telefone', validators=[Data(), Regexp('^[0-9]{10,11}$', message=MSG_TEL)])
+    telefone = StringField('Telefone', validators=[Data(),
+                            Regexp('^[0-9]{10,11}$', message=MSG_TEL)])
     email = StringField('E-mail', validators=[Data(), Email()])
     submit = SubmitField('Cadastrar')
 
 
 class FormConsultaDocumento(FlaskForm):
-    documento = StringField('Documento', validators=[Data(), Regexp('^[0-9]{5,13}$', message=MSG_DOC)])
+    documento = StringField('Documento', validators=[Data(),
+                            Regexp('^[0-9]{5,13}$', message=MSG_DOC)])
     submit = SubmitField('Localizar')

@@ -1,12 +1,12 @@
-'''
+"""
 livraria/views/principal.py
 
 Define rotas comuns a aplicação.
-'''
+"""
 
 from flask import Flask, render_template, redirect, url_for, flash
 from flask_login import login_user, logout_user, login_required, current_user
-from livraria import app #, views
+from livraria import app
 from livraria.models import *
 from livraria.tables import *
 from livraria.forms.principal import *
@@ -15,7 +15,6 @@ from livraria.forms.principal import *
 @app.route('/')
 @login_required
 def index():
-    # flash(f'Bem vindo, {current_user}!', category='info')
     return render_template('index.html')
 
 
@@ -40,15 +39,6 @@ def logout():
     flash('Você foi desconectado', category='message')
     return redirect(url_for('login'))
 
-@app.route('/shutdown')
-def server_shutdown():
-    if not current_app.testing:
-        abort(404)
-    shutdown = request.environ.get('werkzeug.server.shutdown')
-    if not shutdown:
-        abort(500)
-        shutdown()
-    return 'Encerrando server...'
 
 @app.errorhandler(404)
 def page_not_found(e):

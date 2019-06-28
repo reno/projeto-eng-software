@@ -1,12 +1,12 @@
-'''
+"""
 livraria/views/livro.py
 
 Define rotas do menu Livro.
-'''
+"""
 
 from flask import Flask, render_template, redirect, url_for, request, session
 from flask_login import login_required
-from isbnlib import is_isbn10, is_isbn13, mask, canonical, meta
+from isbnlib import is_isbn10, is_isbn13, mask, canonical
 from livraria.models import *
 from livraria.tables import *
 from livraria.forms.livro import *
@@ -19,13 +19,19 @@ def consultar_livro():
     form = FormConsultaLivro()
     # ao enviar form, realiza consulta e renderiza resultados 
     if form.validate_on_submit():
-        parametros = {form.campo.data: form.termo.data}
-        resultado = Livro.query.filter_by(**parametros).all()
+        if form.campo.data == 'titulo':
+            resultado = Livro.query.filter(Livro.titulo.contains(form.termo.data)).all()
+        elif form.campo.data == 'autor':
+            resultado = Livro.query.filter(Livro.autor.contains(form.termo.data)).all()
+        else:
+            parametros = {form.campo.data: form.termo.data}
+            resultado = Livro.query.filter_by(**parametros).all()
         tabela = TabelaLivros(resultado)
         return render_template('livro/resultado.html', table=tabela)
     # formulário ainda não enviado, renderiza página
     else:
-        return render_template('livro/consultar.html', form=form, header='Consultar livro')
+        return render_template('livro/consultar.html', form=form,
+            header='Consultar livro')
 
 
 @app.route('/livro/cadastrar', methods=['GET', 'POST'])
@@ -36,7 +42,8 @@ def cadastrar_livro():
     if form.validate_on_submit():
         livro = Livro.query.filter_by(isbn=form.isbn.data).first()
         if livro is not None:
-            return render_template('livro/index.html', text='Livro {} já cadastrado.'.format(mask(str(livro))))
+            return render_template('livro/index.html',
+                text=f'Livro {str(livro)} já cadastrado.')
         else:
             dados = {k: v for k, v in form.data.items()
                      if k not in {'submit','csrf_token'}}
@@ -44,10 +51,12 @@ def cadastrar_livro():
             #livro['isbn'] = canonical(livro['isbn'])
             db.session.add(livro)
             db.session.commit()
-            return render_template('livro/index.html', text='Livro {} cadastrado com sucesso.'.format(mask(str(livro))))
+            return render_template('livro/index.html',
+                text=f'Livro {str(livro)} cadastrado com sucesso.')
     # formulário ainda não enviado, renderiza página
     else:
-        return render_template('livro/cadastrar.html', form=form, header='Cadastrar livro')
+        return render_template('livro/cadastrar.html', form=form, 
+            header='Cadastrar livro')
 
 
 @app.route('/livro/<op>/consulta', methods=['GET', 'POST'])
@@ -58,14 +67,16 @@ def consultar_isbn(op):
     if form_isbn.validate_on_submit():
         livro = Livro.query.filter_by(isbn=form_isbn.isbn.data).first()
         if livro is None:
-            return render_template('livro/index.html', text='Nenhum livro encontrado.')    
+            return render_template('livro/index.html',
+                text='Nenhum livro encontrado.')    
         if op == 'atualizar':
             return redirect(url_for('atualizar_livro', isbn=livro.isbn))
         else:
             return redirect(url_for('excluir_livro', isbn=livro.isbn))
     # formulário ainda não enviado, renderiza página
     else: 
-        return render_template('livro/isbn.html', form=form_isbn, header='{} livro'.format(op.capitalize()))
+        return render_template('livro/isbn.html', form=form_isbn,
+            header='{} livro'.format(op.capitalize()))
 
     
 @app.route('/livro/atualizar/', methods=['GET', 'POST'])
@@ -80,10 +91,12 @@ def atualizar_livro():
                  if k not in {'submit','csrf_token'}}
         livro.data = dados 
         db.session.commit()
-        return render_template('livro/index.html', text='Livro atualizado com sucesso.')  
+        return render_template('livro/index.html',
+            text='Livro atualizado com sucesso.')  
     # formulário ainda não enviado, renderiza página
     else:
-        return render_template('livro/atualizar.html', form=form_atualizacao, header='Atualizar livro') 
+        return render_template('livro/atualizar.html', form=form_atualizacao,
+            header='Atualizar livro') 
 
 
 @app.route('/livro/excluir/', methods=['GET', 'POST'])
@@ -97,6 +110,8 @@ def excluir_livro():
     if confirmacao.validate_on_submit():
         db.session.delete(livro)
         db.session.commit()
-        return render_template('livro/index.html', text='Livro excluido com sucesso.')
+        return render_template('livro/index.html',
+            text='Livro excluido com sucesso.')
     else:
-        return render_template('livro/excluir.html', table=tabela, form=confirmacao, header='Excluir livro')
+        return render_template('livro/excluir.html', table=tabela, 
+            form=confirmacao, header='Excluir livro')

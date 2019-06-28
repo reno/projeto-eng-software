@@ -1,8 +1,8 @@
-'''
+"""
 livraria/views/pedido.py
 
 Define rotas do menu Pedidos.
-'''
+"""
 
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_login import login_user, logout_user, login_required, current_user
@@ -68,6 +68,7 @@ def cadastrar_pedido():
         dados['cliente'] = cliente
         vendedor = Funcionario.query.filter_by(id=current_user.id).first()
         dados['vendedor'] = vendedor
+        desconto = dados['desconto']
         # insere o pedido do BD
         pedido = Pedido(**dados)
         db.session.add(pedido)
@@ -81,12 +82,13 @@ def cadastrar_pedido():
                 item.livro = livro
                 pedido.itens.append(item)
         total = sum([item.livro.preco * item.quantidade for item in pedido.itens])
+        total -=  (total * (desconto/100))
         pedido.total = total
         db.session.add(pedido)
         db.session.commit()
         return render_template('pedido/index.html',
                text= f'Pedido {pedido} cadastrado com sucesso. '
-               + f'Valor total {pedido.total}')
+               + f'Valor total R$ {pedido.total:.2f}')
     else:
         return render_template('pedido/cadastrar.html', form=form,
                header='Cadastrar pedido')

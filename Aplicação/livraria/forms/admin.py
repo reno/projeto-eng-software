@@ -1,12 +1,14 @@
-'''
+"""
 livraria/forms/admin.py
 
 Define formularios usados no menu Admin.
-'''
+"""
 
 from flask_wtf import FlaskForm
-from wtforms import IntegerField, DecimalField, StringField, SubmitField, SelectField, BooleanField, PasswordField, HiddenField
-from wtforms.validators import DataRequired as Data, Email, Regexp, EqualTo, ValidationError
+from wtforms import IntegerField, DecimalField, StringField, SubmitField,\
+                    SelectField, BooleanField, PasswordField, HiddenField
+from wtforms.validators import DataRequired as Data,\
+                               Email, Regexp, EqualTo, ValidationError
 from isbnlib import is_isbn10, is_isbn13
 from livraria.models import *
 
@@ -16,7 +18,8 @@ MSG_SENHA = 'As senhas precisam ser idênticas.'
 
 class FormConsultaVendedor(FlaskForm):
     opcoes = [(atr, atr.capitalize()) for atr in dir(Funcionario)
-              if atr is not 'id' and not atr.startswith(('_', 'a', 'q', 'm', 'v', 'is', 'senha', 'get'))]
+              if atr is not 'id' and not atr.startswith(('_', 'a', 'q', 'm', 'v', 
+                                                        'is', 'senha', 'get'))]
     opcoes.insert(0, ('id', 'Registro'))
     campo = SelectField('Campo de busca', choices=opcoes)  
     termo = StringField('Palavra-chave', validators=[Data()])
@@ -25,8 +28,10 @@ class FormConsultaVendedor(FlaskForm):
 
 class FormCadastroVendedor(FlaskForm):
     nome = StringField('Nome', validators=[Data()])
-    usuario = StringField('Usuário', validators=[Data(), Regexp('^[a-z0-9_]+$', message=MSG_USUARIO)])
-    senha  = PasswordField('Senha', validators=[Data(), EqualTo('confirma_senha', message=MSG_SENHA)])
+    usuario = StringField('Usuário', validators=[Data(),
+                          Regexp('^[a-z0-9_]+$', message=MSG_USUARIO)])
+    senha  = PasswordField('Senha', validators=[Data(),
+                           EqualTo('confirma_senha', message=MSG_SENHA)])
     confirma_senha  = PasswordField('Confirme a senha', validators=[Data()])
     admin = BooleanField('Conceder permissão de administrador.')
     submit = SubmitField('Registrar')
@@ -38,8 +43,11 @@ class FormCadastroVendedor(FlaskForm):
 class FormAtualizacaoVendedor(FlaskForm):
     id = HiddenField(validators=[Data()])
     nome = StringField('Nome', validators=[Data()])
-    usuario = StringField('Usuário', validators=[Data(), Regexp('^[a-z0-9_]+$', message=MSG_USUARIO)])
-    nova_senha = PasswordField('Nova senha', description='Opcional', validators=[EqualTo('confirma_senha', message=MSG_SENHA)])
+    usuario = StringField('Usuário', validators=[Data(),
+                          Regexp('^[a-z0-9_]+$', message=MSG_USUARIO)])
+    nova_senha = PasswordField('Nova senha', description='Opcional',
+                                validators=[EqualTo('confirma_senha',
+                                message=MSG_SENHA)])
     confirma_senha = PasswordField('Confirme a senha')
     submit = SubmitField('Atualizar')
 

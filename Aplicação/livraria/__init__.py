@@ -1,8 +1,8 @@
-'''
+"""
 livraria/__init__.py
 
 Inicialização do pacote livraria, executado na importação.
-'''
+"""
 
 from flask import Flask
 from flask_bootstrap import Bootstrap
@@ -11,7 +11,7 @@ from flask_wtf.csrf import CSRFProtect
 from config import config
 
 def set_config(ambiente):
-    '''Sobrescreve as configurações base conforme o ambiente'''
+    """Sobrescreve as configurações base conforme o ambiente"""
     app.config.from_object(config[ambiente])
 
 login_manager = LoginManager()

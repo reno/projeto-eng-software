@@ -1,13 +1,15 @@
-'''
+"""
 livraria/forms/pedido.py
 
 Define formularios usados no menu Pedidos.
-'''
+"""
 
 from flask_wtf import FlaskForm
 from flask_login import current_user
-from wtforms import IntegerField, DecimalField, StringField, SubmitField, SelectField, FieldList, FormField, BooleanField, HiddenField
-from wtforms.validators import DataRequired as Data, Email, Regexp, ValidationError
+from wtforms import IntegerField, DecimalField, StringField, SubmitField,\
+                    SelectField, FieldList, FormField, BooleanField, HiddenField
+from wtforms.validators import DataRequired as Data,\
+                               InputRequired, Email, Regexp, ValidationError
 from isbnlib import is_isbn10, is_isbn13
 from livraria.models import *
 
@@ -26,7 +28,7 @@ class FormItensPedido(FlaskForm):
 class FormCadastroPedido(FlaskForm):
     cliente = StringField('Cliente', validators=[Data()])
     itens = FieldList(FormField(FormItensPedido), min_entries=1, max_entries=9)
-    desconto = StringField('Desconto', validators=[Data()])
+    desconto = IntegerField('Desconto', validators=[InputRequired()])
     submit = SubmitField('Cadastrar')
 
     def validate_cliente(self, field):
@@ -39,7 +41,7 @@ class FormAtualizacaoPedido(FlaskForm):
     cliente = StringField('Cliente', validators=[Data()])
     itens = FieldList(FormField(FormItensPedido))
     vendedor = HiddenField()
-    desconto = StringField('Desconto', validators=[Data()])
+    desconto = IntegerField('Desconto', validators=[Data()])
     total = HiddenField()
     submit = SubmitField('Cadastrar')
 

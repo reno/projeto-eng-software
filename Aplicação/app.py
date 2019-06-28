@@ -1,8 +1,11 @@
-'''
+"""
 app.py
 
 Instancia app, para desenvolvimento.
-'''
+
+Para iniciar a aplicação, execute o arquivo ou use o comando: flask run
+Para executar os testes unitários, use o comando: flask test
+"""
 
 import click
 from sys import argv
@@ -24,5 +27,6 @@ def test(test_names):
 
 
 if __name__ == '__main__':
+    """Inicializa a aplicação web"""
     livraria.set_config('dev')
     app.run(debug=True)
